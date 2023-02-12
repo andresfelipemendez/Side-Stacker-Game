@@ -1,0 +1,27 @@
+version: '3'
+services:
+  server:
+    build:
+      context: ./server
+    ports:
+      - "3001:3001"
+    environment:
+      - MONGO_URI=mongodb://db:27017/side_stacker
+    depends_on:
+      - db
+    volumes:
+      - ./server:/app
+  client:
+    build:
+      context: ./client
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client:/app
+  db:
+    image: mongo
+    volumes:
+      - ./data:/data/db
+    restart: always
+    ports:
+      - "27017:27017"
