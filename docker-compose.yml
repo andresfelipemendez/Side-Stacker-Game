@@ -5,8 +5,6 @@ services:
       context: ./server
     ports:
       - "3001:3001"
-    environment:
-      - MONGO_URI=mongodb://db:27017/side_stacker
     depends_on:
       - db
     volumes:
@@ -19,9 +17,10 @@ services:
     volumes:
       - ./client:/app
   db:
-    image: mongo
-    volumes:
-      - ./data:/data/db
-    restart: always
+    image: postgres
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
-      - "27017:27017"
+      - "5432:5432"
