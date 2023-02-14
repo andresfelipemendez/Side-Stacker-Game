@@ -1,36 +1,33 @@
 const express = require('express');
+const cors = require('cors'); 
+const {Sequelize, Schema, DataTypes } = require("sequelize");
 
 const recordRoutes = express.Router();
+recordRoutes.use(cors());
 
-const {dbo, Game} = require('../db/conn');
+const dbo = require('../db/conn');
 
-const ObjectId = require('mongodb').ObjectID;
-
-recordRoutes.route('/games').get(function (req,res) {
+recordRoutes.route('/games').get( function (req,res) {
     let db_connect = dbo.getDb('side_stacker');
-    const MyModel = db_connect.model('games', new Schema({ 
-        game_id: String,
-        game_name: String,
-        game_status: String,
-        game_start_time: String,
-        game_end_time: String,
-        game_duration: String,
-        game_players: String,
-        game_winner: String,
-        game_loser: String
-    }));
 
-    MyModel.find({}, function(err, result){
-        if (err) throw err;
-        res.json(result);
-    });
+    console.log("games",db_connect.models.Game);
+
+    db_connect.models.Game.findAll().
+    then((games) => {
+        console.log("games",games);
+        res.status(200);
+        res.json(games);
+    }).catch((error) => res.status(400).send({ message: error }));
+    
+    
+    
 
 });
 
 recordRoutes.route('/games/add').post(function (req,res) {
-    console.log(req.body);
+    let db_connect = dbo.getDb('side_stacker');
 
-    const game = new Game({
+    const game = new db_connect.models.Game({
         game_name: "req.body.game_name",
         game_status: "req.body.game_status",
         game_start_time: "req.body.game_start_time",

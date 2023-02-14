@@ -4,20 +4,18 @@ import { useNavigate } from "react-router-dom";
 export default function CreateGame() {
     const [gameName, setGameName] = useState("");
     const [gameStatus, setGameStatus] = useState("");
-    const [gameStartTime, setGameStartTime] = useState("");
-    const [gameEndTime, setGameEndTime] = useState("");
-    const [gameDuration, setGameDuration] = useState("");
-    const [gamePlayers, setGamePlayers] = useState("");
-    const [gameWinner, setGameWinner] = useState("");
-    const [gameLoser, setGameLoser] = useState("");
     const navigate = useNavigate();
     
     async function createGame(e) {
         e.preventDefault();
-        console.log("createGame");
+        console.log(" before send createGame");
 
         const response = await fetch("http://localhost:5000/games/add", {
+         //   mode: 'cors',
             method: "POST",
+            headers: { 
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify({
                 game_name: gameName,
                 game_status: gameStatus
@@ -33,7 +31,7 @@ export default function CreateGame() {
         });
     
         
-        console.log("createGame");
+        console.log("after createGame");
     }
     
     return (

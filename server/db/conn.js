@@ -29,7 +29,7 @@ module.exports = {
   getDb: function () {
     return _db;
   },
-  Game: _db.define('game', {
+  Game: _db.define('Game', {
     game_name: {
       type: Sequelize.STRING,
       allowNull: false,
