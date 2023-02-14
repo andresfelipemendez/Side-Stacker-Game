@@ -12,31 +12,34 @@ export default function CreateGame() {
     const [gameLoser, setGameLoser] = useState("");
     const navigate = useNavigate();
     
-    async function createGame() {
+    async function createGame(e) {
+        e.preventDefault();
+        console.log("createGame");
+
         const response = await fetch("http://localhost:5000/games/add", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
             body: JSON.stringify({
                 game_name: gameName,
                 game_status: gameStatus
             }),
+        }) 
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Success:", data);
+          navigate("/");
+        })
+        .catch((error) => {
+          console.error("Error:", error);
         });
-        
-        if (!response.ok) {
-            const message = `An error has occured: ${response.status}`;
-            window.alert(message);
-            return;
-        }
     
-        navigate("/");
+        
+        console.log("createGame");
     }
     
     return (
         <div className="container">
         <h3>Create New Game</h3>
-        <form>
+        <form onSubmit={createGame}>
             <div className="form-group">
             <label htmlFor="game-name-input">Name</label>
             <input
@@ -64,7 +67,6 @@ export default function CreateGame() {
                 type="submit"
                 value="Create Game"
                 className="btn btn-primary"
-                onSubmit={createGame}
             />
             </div>
         </form>

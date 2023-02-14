@@ -2,7 +2,7 @@ const express = require('express');
 
 const recordRoutes = express.Router();
 
-const dbo = require('../db/conn');
+const {dbo, Game} = require('../db/conn');
 
 const ObjectId = require('mongodb').ObjectID;
 
@@ -25,32 +25,36 @@ recordRoutes.route('/games').get(function (req,res) {
         res.json(result);
     });
 
-    // db_connect
-    //     .collection('records')
-    //     .find({})
-    //     .toArray(function(err, result){
-    // });
+});
+
+recordRoutes.route('/games/add').post(function (req,res) {
+    console.log(req.body);
+
+    const game = new Game({
+        game_name: "req.body.game_name",
+        game_status: "req.body.game_status",
+        game_start_time: "req.body.game_start_time",
+        game_end_time: "req.body.game_end_time",
+        game_duration: "req.body.game_duration",
+        game_players: "req.body.game_players",
+        game_winner: "req.body.game_winner",
+        game_loser: "req.body.game_loser",
+    });
+
+    game
+        .save()
+        .then(() => res.status(201).send({ message: 'Game created successfully' }))
+        .catch((error) => res.status(400).send({ message: error }));
 });
 
 recordRoutes.route('/record').get(function (req,res) {
     let db_connect = dbo.getDb('side_stacker');
-    const MyModel = db_connect.model('Test', new Schema({ name: String }));
-    // db_connect
-    //     .collection('records')
-    //     .find({})
-    //     .toArray(function(err, result){
-    // });
+    
 });
 
 recordRoutes.route('/record/:id').get(function (req,res) {
     let db_connect = dbo.getDb();
-    // let myquery = { _id: ObjectId(req.params.id) };
-    // db_connect
-    //     .collection('records')
-    //     .findOne(myquery, function(err, result){
-    //         if (err) throw err;
-    //         res.json(result);
-    // });
+
 });
 
 module.exports = recordRoutes;

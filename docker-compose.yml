@@ -5,6 +5,7 @@ services:
       context: ./server
     ports:
       - "3001:3001"
+      - "5000:5000"
     depends_on:
       - db
     volumes:
@@ -16,6 +17,8 @@ services:
       - "3000:3000"
     volumes:
       - ./client:/app
+    environment:
+     - CHOKIDAR_USEPOLLING=true
   db:
     image: postgres
     environment:
