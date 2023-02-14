@@ -8,7 +8,7 @@ recordRoutes.use(cors());
 const dbo = require('../db/conn');
 
 recordRoutes.route('/games').get( function (req,res) {
-    let db_connect = dbo.getDb('side_stacker');
+    let db_connect = dbo.getDb();
 
     console.log("games",db_connect.models.Game);
 
@@ -25,15 +25,15 @@ recordRoutes.route('/games').get( function (req,res) {
 });
 
 recordRoutes.route('/games/add').post(function (req,res) {
-    let db_connect = dbo.getDb('side_stacker');
+    let db_connect = dbo.getDb();
 
     const game = new db_connect.models.Game({
         game_name: "req.body.game_name",
         game_status: "req.body.game_status",
-        game_start_time: "req.body.game_start_time",
-        game_end_time: "req.body.game_end_time",
-        game_duration: "req.body.game_duration",
-        game_players: "req.body.game_players",
+        game_start_time: db_connect.fn('NOW'),
+        game_end_time: db_connect.fn('NOW'),
+        game_duration: 1,
+        game_players: 2,
         game_winner: "req.body.game_winner",
         game_loser: "req.body.game_loser",
     });
@@ -45,7 +45,7 @@ recordRoutes.route('/games/add').post(function (req,res) {
 });
 
 recordRoutes.route('/record').get(function (req,res) {
-    let db_connect = dbo.getDb('side_stacker');
+    let db_connect = dbo.getDb();
     
 });
 

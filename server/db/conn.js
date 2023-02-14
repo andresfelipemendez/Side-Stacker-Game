@@ -18,8 +18,9 @@ module.exports = {
   
     _db
       .authenticate()
-      .then(() => {
+      .then(async () => {
         console.log("Connection has been established successfully.");
+        await _db.sync();
       })
       .catch((err) => {
         console.error("Unable to connect to the database:", err);
