@@ -8,6 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install the dependencies
+RUN npm -g install nodemon
 RUN npm install
 
 # Copy the rest of the application files into the image
