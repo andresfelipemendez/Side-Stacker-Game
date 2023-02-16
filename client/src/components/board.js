@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import styles from "./board.module.css";
 function Board({ initialBoard }) {
   const [board, setBoard] = useState(initialBoard);
 
@@ -26,7 +26,8 @@ function Board({ initialBoard }) {
   };
 
   return (
-    <div>
+    <div className={styles.container}>
+        <div>
       {board.map((row, rowIndex) => (
         <div key={rowIndex}>
           {row.map((value, columnIndex) => (
@@ -34,6 +35,7 @@ function Board({ initialBoard }) {
           ))}
         </div>
       ))}
+      </div>
     </div>
   );
 }
