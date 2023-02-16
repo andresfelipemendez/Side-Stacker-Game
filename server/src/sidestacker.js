@@ -14,4 +14,14 @@ module.exports = {
         }
         return board;
     },
+    stackRight: (row,player) => {
+        row.arr[6-row.right]=player;
+        row.right++;
+        return row;
+    },
+    stackLeft: (row,player) => {
+        row.arr[row.left]=player;
+        row.left++;
+        return row;
+    }
 }
