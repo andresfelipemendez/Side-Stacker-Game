@@ -15,7 +15,7 @@ _db = new Sequelize(DB_NAME, DB_USERNAME, DB_PASSWORD, {
 module.exports = {
   connectToServer: function (callback) {
     console.log("connecting to database");
-  
+
     _db
       .authenticate()
       .then(async () => {
@@ -30,7 +30,7 @@ module.exports = {
   getDb: function () {
     return _db;
   },
-  Game: _db.define('Game', {
+  Game: _db.define("Game", {
     game_name: {
       type: Sequelize.STRING,
       allowNull: false,
@@ -63,5 +63,5 @@ module.exports = {
       type: Sequelize.STRING,
       allowNull: false,
     },
-  })
+  }),
 };
