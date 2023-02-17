@@ -89,3 +89,61 @@ describe('stacking Left', () => {
         expect(stackedLeft.left).toBe(2);
     });
 });
+
+describe('stacking both ends', () => {
+    test('stack player o to the left of row with one x piece', () => {
+        const row = {
+            arr: [0,0,0,0,0,0,0],
+            left:0,
+            right:0,
+        }
+        const stackedLeft = stackLeft(row,'o');
+        expect(stackedLeft.arr[0]).toBe('o');
+        expect(stackedLeft.left).toBe(1);
+
+        const stackedRight = stackRight(row,'x');
+        expect(stackedLeft.arr[6]).toBe('x');
+        expect(stackedLeft.right).toBe(1);
+    });
+
+    test('stack player x to the left of row with one x piece', () => {
+        const row = {
+            arr: ['x','x','o',0,'x','o','x'],
+            left:3,
+            right:3,
+        }
+        const stackedLeft = stackLeft(row,'x');
+        expect(stackedLeft.arr[3]).toBe('x');
+        expect(stackedLeft.left).toBe(4);
+        expect(stackedLeft.arr).toEqual(['x','x','o','x','x','o','x']);
+        
+    });
+
+    test("don't stack anymore if row its already filled", () => {
+        const row = {
+            arr: ['x','x','o','x','x','o','x'],
+            left:4,
+            right:3,
+        }
+        const stackedLeft = stackLeft(row,'o');
+        expect(stackedLeft.arr.length).toBe(7);
+        expect(stackedLeft.arr).toEqual(['x','x','o','x','x','o','x']);
+        expect(stackedLeft.left).toBe(4);
+    });
+});
+
+describe('board', () => {
+    test('is empty', () => {
+        const board = createBoard();
+        expectedBoard = [
+            {row:[0,0,0,0,0,0,0], left:0, right:0},
+            {row:[0,0,0,0,0,0,0], left:0, right:0},
+            {row:[0,0,0,0,0,0,0], left:0, right:0},
+            {row:[0,0,0,0,0,0,0], left:0, right:0},
+            {row:[0,0,0,0,0,0,0], left:0, right:0},
+            {row:[0,0,0,0,0,0,0], left:0, right:0},
+            {row:[0,0,0,0,0,0,0], left:0, right:0},
+        ];
+        expect(board).toEqual(expectedBoard);
+    });
+});
