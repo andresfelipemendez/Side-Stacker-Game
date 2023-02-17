@@ -1,10 +1,12 @@
+"use strict";
 const {
   createBoard,
   stackRight,
   stackLeft,
-  getHorizontalAdjacenPieces,
+  getHorizontalAdjacentPieces,
+  getVerticalAdjacentPieces,
   isWinningMove,
-} = require("../src/sidestacker.js");
+} = require("../src/sideStacker.js");
 
 it("should create a new board with 7 rows and 7 columns", () => {
   const board = createBoard();
@@ -130,7 +132,7 @@ describe("stacking both ends", () => {
 describe("board", () => {
   test("is empty", () => {
     const board = createBoard();
-    expectedBoard = [
+    const expectedBoard = [
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
@@ -143,9 +145,9 @@ describe("board", () => {
   });
 });
 
-describe("get horizontalPlayedRow", () => {
+describe("get horizontal played row", () => {
   test("empty board", () => {
-    board = [
+    const board = [
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
@@ -159,8 +161,8 @@ describe("get horizontalPlayedRow", () => {
     const move = {
       row: firsRow,
       column: stackedLeft.leftIndex, // 0 base index
-    }
-    expect(getHorizontalAdjacenPieces(board, move)).toEqual(['o',0,0,0]);
+    };
+    expect(getHorizontalAdjacentPieces(board, move)).toEqual(["o", 0, 0, 0]);
   });
 
   test("right of board", () => {
@@ -178,13 +180,13 @@ describe("get horizontalPlayedRow", () => {
     const move = {
       row: firsRow,
       column: board[firsRow].rightIndex, // 0 base index
-    }
-    expect(getHorizontalAdjacenPieces(board, move)).toEqual([0,0,0,'o']);
+    };
+    expect(getHorizontalAdjacentPieces(board, move)).toEqual([0, 0, 0, "o"]);
   });
 
   test("center of board", () => {
     let board = [
-      { row: [0, 0, 0, 0, 'x', 'o', 'o'], leftCount: 0, rightCount: 3 },
+      { row: [0, 0, 0, 0, "x", "o", "o"], leftCount: 0, rightCount: 3 },
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
@@ -197,15 +199,15 @@ describe("get horizontalPlayedRow", () => {
     const move = {
       row: firsRow,
       column: board[firsRow].rightIndex, // 0 base index
-    }
-    expect(getHorizontalAdjacenPieces(board, move)).toEqual([0,0,0,'o','x','o','o']);
+    };
+    const expectedArray = [0, 0, 0, "o", "x", "o", "o"];
+    expect(getHorizontalAdjacentPieces(board, move)).toEqual(expectedArray);
   });
 });
 
-describe("win condition", () => {
-  test("empty board", () => {
-    const board = createBoard();
-    expectedBoard = [
+describe("get vertical played column", () => {
+  test("empty board firsts row", () => {
+    const board = [
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
@@ -218,7 +220,73 @@ describe("win condition", () => {
     const stackedLeft = stackLeft(board[firsRow], "o");
     const move = {
       row: firsRow,
-      col: stackedLeft.leftCount, 
+      column: stackedLeft.leftIndex, // 0 base index
+    };
+    const expectedColumn = ["o", 0, 0, 0];
+    expect(getVerticalAdjacentPieces(board, move)).toEqual(expectedColumn);
+  });
+
+  test("empty board last row of board", () => {
+    let board = [
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+    ];
+    const lastRow = 6;
+    board[lastRow] = stackRight(board[lastRow], "o");
+    const move = {
+      row: lastRow,
+      column: board[lastRow].rightIndex, // 0 base index
+    };
+
+    expect(getVerticalAdjacentPieces(board, move)).toEqual([0, 0, 0, "o"]);
+  });
+
+  test("vertical center of board", () => {
+    let board = [
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: ["o", 0, 0, 0, 0, 0, 0], leftCount: 1, rightCount: 0 },
+      { row: ["x", 0, 0, 0, 0, 0, 0], leftCount: 1, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: ["x", 0, 0, 0, 0, 0, 0], leftCount: 1, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+    ];
+    const centerRow = 3;
+    board[centerRow] = stackLeft(board[centerRow], "o");
+    const move = {
+      row: centerRow,
+      column: board[centerRow].leftIndex, // 0 base index
+    };
+    const verticalAdjacentPieces = getVerticalAdjacentPieces(board, move);
+    const expectedArray = [0, "o", "x", "o", 0, "x", 0];
+
+    expect(verticalAdjacentPieces.length).toBe(7);
+    expect(verticalAdjacentPieces).toEqual(expectedArray);
+  });
+});
+
+describe("win condition", () => {
+  test("empty board", () => {
+    const board = createBoard();
+    const expectedBoard = [
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+    ];
+    const firsRow = 0;
+    const stackedLeft = stackLeft(board[firsRow], "o");
+    const move = {
+      row: firsRow,
+      col: stackedLeft.leftCount,
     };
     expect(isWinningMove(move, board)).toBe(false);
   });

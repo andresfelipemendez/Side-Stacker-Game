@@ -15,7 +15,7 @@
       "cwd": "/Users/andres/Development/Side-Stacker-Game/server",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "program": "/Users/andres/Development/Side-Stacker-Game/server/node_modules/.bin/jest",
+      "program": "/Users/andres/Development/Side-Stacker-Game/server/node_modules/.bin/jest"
     }
   ]
 }
