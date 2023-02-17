@@ -32,6 +32,13 @@ function GetCappedTopRightLength(row, column) {
     return diagDistance < winningLengthMinusOne ? diagDistance : winningLengthMinusOne;
 }
 
+function GetCappedBottomLeftLength(row, column) {
+    let distanceLeft = column;
+    let distanceBottom = boardHeight - row;
+    let diagDistance = distanceLeft < distanceBottom ? distanceLeft : distanceBottom;
+    return diagDistance < winningLengthMinusOne ? diagDistance : winningLengthMinusOne;
+}
+
 module.exports = {
   createBoard: () => {
     const board = [];
@@ -92,10 +99,11 @@ module.exports = {
     }
     return adjacentPieces;
   },
-  getBottomLeft: (move) => {
+  getBottomLeft: (row, column) => {
+    let length = GetCappedBottomLeftLength(row, column);
     return {
-        bottom:0,
-        left:0
+        bottom: row + length,
+        left: column - length
     }
   },
   
