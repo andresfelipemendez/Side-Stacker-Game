@@ -9,34 +9,42 @@ const boardHeight = 6;
 const winningLength = 4;
 const winningLengthMinusOne = winningLength - 1;
 
-
 function IsRowFull(row) {
-  return row.rightCount + row.leftCount > boardWidth
+  return row.rightCount + row.leftCount > boardWidth;
 }
 
 function CappedLeft(column) {
-  return column - winningLengthMinusOne < 0 ? 0 : column - winningLengthMinusOne;
+  return column - winningLengthMinusOne < 0
+    ? 0
+    : column - winningLengthMinusOne;
 }
 
 function CappedRight(column) {
-    return column + winningLengthMinusOne > boardWidth ? boardWidth : column + winningLengthMinusOne;
+  return column + winningLengthMinusOne > boardWidth
+    ? boardWidth
+    : column + winningLengthMinusOne;
 }
 
 function CappedTop(row) {
-    return row - winningLengthMinusOne < 0 ? 0 : row - winningLengthMinusOne;
+  return row - winningLengthMinusOne < 0 ? 0 : row - winningLengthMinusOne;
 }
 
 function GetCappedTopRightLength(row, column) {
-    let distanceRight = boardWidth - column;
-    let diagDistance = row < distanceRight ? row : distanceRight
-    return diagDistance < winningLengthMinusOne ? diagDistance : winningLengthMinusOne;
+  let distanceRight = boardWidth - column;
+  let diagDistance = row < distanceRight ? row : distanceRight;
+  return diagDistance < winningLengthMinusOne
+    ? diagDistance
+    : winningLengthMinusOne;
 }
 
 function GetCappedBottomLeftLength(row, column) {
-    let distanceLeft = column;
-    let distanceBottom = boardHeight - row;
-    let diagDistance = distanceLeft < distanceBottom ? distanceLeft : distanceBottom;
-    return diagDistance < winningLengthMinusOne ? diagDistance : winningLengthMinusOne;
+  let distanceLeft = column;
+  let distanceBottom = boardHeight - row;
+  let diagDistance =
+    distanceLeft < distanceBottom ? distanceLeft : distanceBottom;
+  return diagDistance < winningLengthMinusOne
+    ? diagDistance
+    : winningLengthMinusOne;
 }
 
 module.exports = {
@@ -68,8 +76,12 @@ module.exports = {
   getHorizontalAdjacentPieces: (board, move) => {
     let adjacentPieces = [];
     const playedRow = board[move.row].row;
-    const cappedLeft = move.column - 3 < 0 ? 0 : move.column - 3;
-    const cappedRight = move.column + 3 > 6 ? 6 : move.column + 3;
+    const cappedLeft =
+      move.column - winningLengthMinusOne < 0 ? 0 : move.column - winningLengthMinusOne;
+    const cappedRight =
+      move.column + winningLengthMinusOne > boardWidth
+        ? 6
+        : move.column + winningLengthMinusOne;
     for (let i = cappedLeft; i <= cappedRight; i++) {
       adjacentPieces.push(playedRow[i]);
     }
@@ -87,8 +99,8 @@ module.exports = {
   getForwardDiagonalAdjacentPieces: (board, move) => {
     let adjacentPieces = [];
 
-    const {cappedBottom,cappedLeft} =  getBottomLeft(move);
-    const {cappedTop,cappedRight} = getTopRight(move);
+    const { cappedBottom, cappedLeft } = getBottomLeft(move);
+    const { cappedTop, cappedRight } = getTopRight(move);
 
     let i = cappedTop;
     let j = cappedLeft;
@@ -102,19 +114,19 @@ module.exports = {
   getBottomLeft: (row, column) => {
     let length = GetCappedBottomLeftLength(row, column);
     return {
-        bottom: row + length,
-        left: column - length
-    }
+      bottom: row + length,
+      left: column - length,
+    };
   },
-  
+
   getTopRight: (row, column) => {
     let length = GetCappedTopRightLength(row, column);
     const top = row - length;
     const right = column + length;
     return {
-        top: top,
-        right: right
-    }
+      top: top,
+      right: right,
+    };
   },
   isWinningMove(player, board) {
     return false;

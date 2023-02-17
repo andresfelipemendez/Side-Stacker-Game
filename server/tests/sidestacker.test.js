@@ -274,53 +274,53 @@ describe("get vertical played column", () => {
 });
 
 describe("diagonal functions", () => {
-    test("bottom left to top right of 0,0 to be 0,0", () => {
-        const expectedBottomLeft = { bottom: 0, left: 0 };
-        const expectedTopRight = { top: 0, right: 0 };
-        const  bottomLeft = getBottomLeft(0, 0);
-        const  topRight = getTopRight(0, 0);
-        expect(bottomLeft).toEqual(expectedBottomLeft);
-        expect(topRight).toEqual(expectedTopRight);
-    });
+  test("bottom left to top right of 0,0 to be 0,0", () => {
+    const expectedBottomLeft = { bottom: 0, left: 0 };
+    const expectedTopRight = { top: 0, right: 0 };
+    const bottomLeft = getBottomLeft(0, 0);
+    const topRight = getTopRight(0, 0);
+    expect(bottomLeft).toEqual(expectedBottomLeft);
+    expect(topRight).toEqual(expectedTopRight);
+  });
 
-    test("bottom left to top right second row", () => {
-        const expectedTopRight = { top: 0, right: 1 };
-        const  topRight = getTopRight(1, 0);
-        expect(topRight).toMatchObject(expectedTopRight);
-    });
+  test("bottom left to top right second row", () => {
+    const expectedTopRight = { top: 0, right: 1 };
+    const topRight = getTopRight(1, 0);
+    expect(topRight).toMatchObject(expectedTopRight);
+  });
 
-    test("bottom row left column", () => {
-        const expectedTopRight = { top: 3, right: 3 };
-        const  topRight = getTopRight(6, 0);
-        expect(topRight).toMatchObject(expectedTopRight);
-    });
+  test("bottom row left column", () => {
+    const expectedTopRight = { top: 3, right: 3 };
+    const topRight = getTopRight(6, 0);
+    expect(topRight).toMatchObject(expectedTopRight);
+  });
 
-    test("bottom left", () => {
-        const expectedBottomLeft = { bottom: 1, left: 0 };
-        const  bottomLeft = getBottomLeft(0, 1);
-        expect(bottomLeft).toMatchObject(expectedBottomLeft);
-    });
+  test("bottom left", () => {
+    const expectedBottomLeft = { bottom: 1, left: 0 };
+    const bottomLeft = getBottomLeft(0, 1);
+    expect(bottomLeft).toMatchObject(expectedBottomLeft);
+  });
 
-    test("bottom left 3,3 to be 6,0", () => {
-        const expectedBottomLeft = { bottom: 6, left: 0 };
-        const  bottomLeft = getBottomLeft(3, 3);
-        expect(bottomLeft).toMatchObject(expectedBottomLeft);
-    });
+  test("bottom left 3,3 to be 6,0", () => {
+    const expectedBottomLeft = { bottom: 6, left: 0 };
+    const bottomLeft = getBottomLeft(3, 3);
+    expect(bottomLeft).toMatchObject(expectedBottomLeft);
+  });
 
-    test("bottom left 0,6 to be 3,3", () => {
-        const expectedBottomLeft = { bottom: 3, left: 3 };
-        const  bottomLeft = getBottomLeft(0, 6);
-        expect(bottomLeft).toMatchObject(expectedBottomLeft);
-    });
+  test("bottom left 0,6 to be 3,3", () => {
+    const expectedBottomLeft = { bottom: 3, left: 3 };
+    const bottomLeft = getBottomLeft(0, 6);
+    expect(bottomLeft).toMatchObject(expectedBottomLeft);
+  });
 
-    test("bottom left to top right of 6,6 to be 6,6", () => {
-        const expectedBottomLeft = { bottom: 6, left: 6 };
-        const expectedTopRight = { top: 6, right: 6 };
-        const  bottomLeft = getBottomLeft(6, 6);
-        const  topRight = getTopRight(6, 6);
-        expect(bottomLeft).toEqual(expectedBottomLeft);
-        expect(topRight).toEqual(expectedTopRight);
-    });
+  test("bottom left to top right of 6,6 to be 6,6", () => {
+    const expectedBottomLeft = { bottom: 6, left: 6 };
+    const expectedTopRight = { top: 6, right: 6 };
+    const bottomLeft = getBottomLeft(6, 6);
+    const topRight = getTopRight(6, 6);
+    expect(bottomLeft).toEqual(expectedBottomLeft);
+    expect(topRight).toEqual(expectedTopRight);
+  });
 });
 
 /*
@@ -348,9 +348,7 @@ describe("get played adjacent forward diagonal pieces", () => {
 });
 */
 
-describe("get played adjacent backward diagonal pieces", () => {
-
-})
+describe("get played adjacent backward diagonal pieces", () => {});
 
 describe("win condition", () => {
   test("empty board", () => {

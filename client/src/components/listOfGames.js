@@ -1,19 +1,22 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const GameRow = (props) => (
-  <tr>
-    <td>{props.game._id}</td>
-    <td>{props.game.game_name}</td>
-    <td>{props.game.game_status}</td>
-    <td>{props.game.game_start_time}</td>
-    <td>{props.game.game_end_time}</td>
-    <td>{props.game.game_duration}</td>
-    <td>{props.game.game_players}</td>
-    <td>{props.game.game_winner}</td>
-    <td>{props.game.game_loser}</td>
-  </tr>
-);
+function GameRow (props) {
+  const navigate = useNavigate();
+  function clickMe() {
+    console.log("clicked",props);
+    navigate("/game/"+props.game.id);
+  };
+
+  return(
+    <tr onClick={clickMe} gameId={props.game.id}>
+      <td>{props.game.id}</td>
+      <td>{props.game.game_name}</td>
+      <td>{props.game.game_status}</td>
+      <td>{props.game.game_players}</td>
+    </tr>
+)};
 
 export default function ListOfGames() {
   const [games, setGames] = useState([]);
@@ -43,7 +46,7 @@ export default function ListOfGames() {
 
   function gameList() {
      return games.map((game) => {
-       return <GameRow game={game} deleteGame={deleteGame} key={game._id} />;
+       return <GameRow game={game} deleteGame={deleteGame} key={game.id} />;
     });
   }
 
@@ -56,12 +59,7 @@ export default function ListOfGames() {
           <th>Game ID</th>
           <th>Game Name</th>
           <th>Game Status</th>
-          <th>Game Start Time</th>
-          <th>Game End Time</th>
-          <th>Game Duration</th>
           <th>Game Players</th>
-          <th>Game Winner</th>
-          <th>Game Loser</th>
         </tr>
         </thead>   
         <tbody>{gameList()}</tbody>

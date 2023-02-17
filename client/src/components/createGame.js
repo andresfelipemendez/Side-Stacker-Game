@@ -11,7 +11,6 @@ export default function CreateGame() {
         console.log(" before send createGame");
 
         const response = await fetch("http://localhost:5000/games/add", {
-         //   mode: 'cors',
             method: "POST",
             headers: { 
                 "Content-Type": "application/json"
