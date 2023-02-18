@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
 function GameRow (props) {

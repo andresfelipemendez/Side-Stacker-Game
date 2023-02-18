@@ -17,6 +17,9 @@ app.use(express.json());
 app.use(require("./routes/record"));
 
 const dbo = require("./db/conn");
+const sideStacker = require("./src/sideStacker");
+
+
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
@@ -32,9 +35,25 @@ server.listen(3001, () => {
 });
 
 io.on("connection", (socket) => {
+  
+  const board = sideStacker.createBoard();
+
   console.log("a user connected");
 
-  socket.on("ping", () => {
-    console.log("a user send ping");
+  socket.emit("updateBoard", sideStacker.getStrippedBoard(board));
+
+  socket.on("playerMove", (move) => {
+    const { rowIndex, side } = move;
+    const newBoard = sideStacker.move(board, rowIndex, side);
+    socket.emit("updateBoard", sideStacker.getStrippedBoard(newBoard));
+    console.log("a user send playerMove", move);
+  });
+
+  socket.on("ping", (params) => {
+
+    io.to(socket.id).emit("pong");
+
+    console.log("a user send ping", params);
+
   });
 });

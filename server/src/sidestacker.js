@@ -48,6 +48,16 @@ function GetCappedBottomLeftLength(row, column) {
 }
 
 module.exports = {
+  move: (board, rowIndex, side, player) => {
+    let row = board[rowIndex];
+    if (side === "left") {
+      row = module.exports.stackLeft(row, player);
+    } else {
+      row = module.exports.stackRight(row, player);
+    }
+    board[rowIndex] = row;
+    return board;
+  },
   createBoard: () => {
     const board = [];
     for (let i = 0; i <= boardWidth; i++) {
@@ -57,6 +67,13 @@ module.exports = {
       }
     }
     return board;
+  },
+  getStrippedBoard(board){
+    let strippedBoard = [];
+    for (let i = 0; i < board.length; i++) {
+      strippedBoard.push(board[i].row);
+    }
+    return strippedBoard;
   },
   stackRight: (row, player) => {
     if (IsRowFull(row)) return row;

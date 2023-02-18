@@ -2,5 +2,26 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    /* height: 100vh; */
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: antiquewhite;
+}
+
+.piece {
+    box-sizing: border-box;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 2rem;
+    padding: 0; 
+    margin: 0.3rem; 
+    width: 2rem;
+    border-radius: 50%;
+    border: 1px solid black;
+    background-color: #fff;
+    cursor: pointer;
+    text-align: center;
 }

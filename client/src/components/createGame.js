@@ -10,7 +10,7 @@ export default function CreateGame() {
         e.preventDefault();
         console.log(" before send createGame");
 
-        const response = await fetch("http://localhost:5000/games/add", {
+        await fetch("http://localhost:5000/games/add", {
             method: "POST",
             headers: { 
                 "Content-Type": "application/json"

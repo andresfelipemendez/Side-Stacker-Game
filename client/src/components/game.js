@@ -1,59 +1,64 @@
 // create react component named Game
-import React, { useState, useEffect } from "react";
-import io from 'socket.io-client';
+import React, { useState, useEffect, useContext } from "react";
+import { useParams } from "react-router-dom";
+import { SocketContext } from "../context/socket";
 import Board from "./board";
 
-const socket = io.connect('http://localhost:3001');
-
-
-
 export default function Game() {
-    const [isConnected, setIsConnected] = useState(socket.connected);
-    const [lastPong, setLastPong] = useState(null);
-  
-    useEffect(() => {
-      socket.on('connect', () => {
-        setIsConnected(true);
-      });
-  
-      socket.on('disconnect', () => {
-        setIsConnected(false);
-      });
-  
-      socket.on('pong', () => {
-        setLastPong(new Date().toISOString());
-      });
-  
-      return () => {
-        socket.off('connect');
-        socket.off('disconnect');
-        socket.off('pong');
-      };
-    }, []);
-  
-    const sendPing = () => {
-      socket.emit('ping');
-    }
+  const params = useParams();
+  const socket = useContext(SocketContext);
+  const [isConnected, setIsConnected] = useState(socket.connected);
+  const [board, setBoard] = useState([
+    ["_", "_", "_", "_", "_", "_", "_"],
+    ["_", "x", "_", "_", "_", "_", "o"],
+    ["x", "_", "_", "_", "_", "x", "x"],
+    ["x", "_", "_", "_", "_", "_", "o"],
+    ["o", "_", "_", "_", "_", "_", "_"],
+    ["_", "_", "_", "_", "_", "_", "_"],
+    ["_", "_", "_", "_", "_", "_", "_"]
+  ]);
 
-    var initialBoard = [    ["_", "_", "_", "_", "_", "_", "_"],
-        ["o", "x", "_", "_", "_", "_", "o"],
-        ["x", "_", "_", "_", "_", "x", "x"],
-        ["x", "_", "_", "_", "_", "_", "o"],
-        ["o", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_"]
-    ]
-    return (
-        <div>
-            <h3>Game</h3>
+  useEffect(() => {
+    socket.on('connect', (io) => {
+      console.log("connect", io, params);
+      
+      
+      socket.emit('ping', { gameId: params.id });
+      setIsConnected(true);
+    });
 
-            <Board initialBoard={initialBoard} />
+    socket.on("updateBoard", (newBoard) => {
+      console.log("updateBoard", newBoard);
+      setBoard(newBoard);
+    });
 
-            <div>
-            <p>Connected: { '' + isConnected }</p>
-            <p>Last pong: { lastPong || '-' }</p>
-            <button onClick={ sendPing }>Send ping</button>
-            </div>
-        </div>
-    );
+    socket.on('disconnect', () => {
+      setIsConnected(false);
+    });
+
+    socket.on('pong', () => {
+      console.log("pong")
+    });
+
+    return () => {
+      socket.off('connect');
+      socket.off('disconnect');
+      socket.off('pong');
+    };
+  }, [params, socket]);
+
+  const sendPlayerMove = (e) => {
+    e.preventDefault();
+    const rowIndex = e.target.getAttribute("row");
+    const side = e.target.getAttribute("side");
+    console.log("sendPlayerMove", { rowIndex, side });
+    socket.emit("playerMove", { rowIndex, side });
+  }
+
+  return (
+    <div>
+      <h3>Game</h3>
+      <Board board={board} sendPlayerMove={sendPlayerMove} />
+    </div>
+  );
 }
