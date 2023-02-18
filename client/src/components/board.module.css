@@ -8,9 +8,13 @@ svg {
     padding: 30px;
     width: 780px;
     height: 630px;
-    background-color: #fff49f;
+    background-color: #F9F2ED;
     border: 1px solid black;
     border-radius: 5px;
+}
+
+svg circle {
+    shape-rendering: geometricPrecision;
 }
 
 .row {

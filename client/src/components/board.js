@@ -6,11 +6,10 @@ export default function Board({ board, sendPlayerMove }) {
   const [player, setPlayer] = useState("x");
 
   
-
   useEffect(() => {
     var s = Snap("#svg");
     const pieceRadius = 30;
-    const strokeWidth = 2;
+    const strokeWidth = 3;
     const leftOffset = pieceRadius + strokeWidth + 80;
     const topOffset = pieceRadius + strokeWidth;
     board.map((row, rowIndex) => {
@@ -18,9 +17,14 @@ export default function Board({ board, sendPlayerMove }) {
         topOffset,
         (80*rowIndex) + topOffset, 
         pieceRadius);
+      
+      leftButton.attr({
+        fill: "#FFE56B",
+        stroke: "#FFE56B",
+        strokeWidth: strokeWidth
+      });
 
-      leftButton.click((e) => {
-        
+      leftButton.click((e) => {  
         console.log("leftButton click " + rowIndex);
         sendPlayerMove({ rowIndex, side: 'left', player: player });
         setPlayer(player === "x" ? "o" : "x");
@@ -30,6 +34,12 @@ export default function Board({ board, sendPlayerMove }) {
           topOffset + 650,
           (80*rowIndex) + topOffset , 
           pieceRadius);
+
+          rightButton.attr({
+            fill: "#FFE56B",
+            stroke: "#FFE56B",
+            strokeWidth: strokeWidth
+          });
 
       rightButton.click((e) => {
         
@@ -46,21 +56,21 @@ export default function Board({ board, sendPlayerMove }) {
         
         if (value === "x") {
           piece.attr({
-            fill: "blue",
-            stroke: "#000",
+            fill: "#651234",
+            stroke: "#1E1D12",
             strokeWidth: strokeWidth
           });
         }
         else if (value === "o") {
         piece.attr({
-          fill: "red",
-          stroke: "#000",
-          strokeWidth: strokeWidth
+          fill: "#2C465E",
+          stroke: "#1E1D12",
+          strokeWidth: strokeWidth,
         });
         } else {
           piece.attr({
-            fill: "#fff",
-            stroke: "#000",
+            fill: "#EBD7B5",
+            stroke: "#EBD7B5",
             strokeWidth: strokeWidth
           });
         }

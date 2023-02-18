@@ -1,21 +1,40 @@
 import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import CreateGame from "./createGame";
+import {
+  Collapse,
+  Card,
+  Table,
+  Button,
+  ButtonGroup,
+  Row,
+  Container,
+} from 'reactstrap';
 
-function GameRow (props) {
+function GameRow(props) {
   const navigate = useNavigate();
   function clickMe() {
-    console.log("clicked",props);
-    navigate("/game/"+props.game.id);
+    console.log("clicked", props);
+    navigate("/game/" + props.game.id);
   };
 
-  return(
-    <tr onClick={clickMe} gameId={props.game.id}>
-      <td>{props.game.id}</td>
+  return (
+    <tr key={props.game.id}>
       <td>{props.game.game_name}</td>
       <td>{props.game.game_status}</td>
-      <td>{props.game.game_players}</td>
+      <td>
+        <ButtonGroup>
+          <Button color="primary" outline>
+            Player 1
+          </Button>
+          <Button color="primary" outline>
+            Player 2
+          </Button>
+        </ButtonGroup>
+      </td>
     </tr>
-)};
+  )
+};
 
 export default function ListOfGames() {
   const [games, setGames] = useState([]);
@@ -44,25 +63,38 @@ export default function ListOfGames() {
   }
 
   function gameList() {
-     return games.map((game) => {
-       return <GameRow game={game} deleteGame={deleteGame} key={game.id} />;
+    return games.map((game) => {
+      return <GameRow game={game} deleteGame={deleteGame} key={game.id} />;
     });
   }
 
   return (
-    <div>
-      <h3>Running Games</h3>
-      <table className="table">
-        <thead className="thead-light" >
-        <tr>
-          <th>Game ID</th>
-          <th>Game Name</th>
-          <th>Game Status</th>
-          <th>Game Players</th>
-        </tr>
-        </thead>   
-        <tbody>{gameList()}</tbody>
-      </table>
-    </div>
+    <>
+    <Container >
+      <Row>
+        <CreateGame />
+      </Row>
+
+      <Row>
+        <Card className="mt-3">
+        <Container>
+
+        <h3 className="mt-3">Running Games</h3>
+      
+        <Table className="table mt-3">
+          <thead className="thead-light" >
+            <tr>
+              <th>Game Name</th>
+              <th>Game Status</th>
+              <th>Players</th>
+            </tr>
+          </thead>
+          <tbody>{gameList()}</tbody>
+        </Table>  
+        </Container>
+        </Card>
+      </Row>
+    </Container>
+    </>
   );
 }
