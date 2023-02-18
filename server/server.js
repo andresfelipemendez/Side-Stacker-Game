@@ -39,12 +39,11 @@ io.on("connection", (socket) => {
   const board = sideStacker.createBoard();
 
   console.log("a user connected");
-
   socket.emit("updateBoard", sideStacker.getStrippedBoard(board));
 
   socket.on("playerMove", (move) => {
-    const { rowIndex, side } = move;
-    const newBoard = sideStacker.move(board, rowIndex, side);
+    const { rowIndex, side, player } = move;
+    const newBoard = sideStacker.move(board, rowIndex, side, player);
     socket.emit("updateBoard", sideStacker.getStrippedBoard(newBoard));
     console.log("a user send playerMove", move);
   });
@@ -52,7 +51,6 @@ io.on("connection", (socket) => {
   socket.on("ping", (params) => {
 
     io.to(socket.id).emit("pong");
-
     console.log("a user send ping", params);
 
   });

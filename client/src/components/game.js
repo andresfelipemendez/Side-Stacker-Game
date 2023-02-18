@@ -47,12 +47,12 @@ export default function Game() {
     };
   }, [params, socket]);
 
-  const sendPlayerMove = (e) => {
-    e.preventDefault();
-    const rowIndex = e.target.getAttribute("row");
-    const side = e.target.getAttribute("side");
-    console.log("sendPlayerMove", { rowIndex, side });
-    socket.emit("playerMove", { rowIndex, side });
+  const sendPlayerMove = ({rowIndex, side, player}) => {
+    //e.preventDefault();
+    // const rowIndex = e.target.getAttribute("row");
+    // const side = e.target.getAttribute("side");
+    console.log("sendPlayerMove", { rowIndex, side, player });
+    socket.emit("playerMove", { rowIndex, side, player });
   }
 
   return (

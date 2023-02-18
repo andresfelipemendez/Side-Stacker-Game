@@ -4,6 +4,15 @@
     align-items: center;
 }
 
+svg {
+    padding: 30px;
+    width: 780px;
+    height: 630px;
+    background-color: #fff49f;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
 .row {
     display: flex;
     justify-content: center;
