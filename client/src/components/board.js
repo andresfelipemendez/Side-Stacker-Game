@@ -2,6 +2,28 @@ import React, { useState, useEffect } from "react";
 import styles from "./board.module.css";
 import Snap from "snapsvg-cjs";
 
+function getRightFacingTrianglePath(x, y, width, height) {
+  return Snap.format("M {centerRight} {y} L {left} {bottom} L {left} {top} Z", {
+    x: x,
+    y: y,
+    centerRight: x + (width / 2),
+    bottom: (y) + (height / 2),
+    top: (y) - (height / 2),
+    left: (x) - (width / 2)
+  });
+}
+
+function getLeftFacingTrianglePath(x, y, width, height) {
+  return Snap.format("M {centerLeft} {y} L {right} {bottom} L {right} {top} Z", {
+    x: x,
+    y: y,
+    centerLeft: x - (width / 2),
+    bottom: (y) + (height / 2),
+    top: (y) - (height / 2),
+    right: (x) + (width / 2)
+  });
+}
+
 export default function Board({ board, player, sendPlayerMove }) {
   
   useEffect(() => {
@@ -40,10 +62,11 @@ export default function Board({ board, player, sendPlayerMove }) {
     const buttonBorderColor = enabled ? "#FFE56B" : "#EEE";
 
     board.board.map((row, rowIndex) => {
-      const leftButton = s.circle(
-        topOffset,
+      const leftButton = s.path(getRightFacingTrianglePath(
+        topOffset, 
         (80*rowIndex) + topOffset, 
-        pieceRadius);
+        30, 
+        40));
       
       leftButton.attr({
         fill: buttonFillColor,
@@ -56,10 +79,12 @@ export default function Board({ board, player, sendPlayerMove }) {
         sendPlayerMove({ rowIndex, side: 'left', player: player });
       });
 
-      const rightButton = s.circle(
-          topOffset + 650,
-          (80*rowIndex) + topOffset , 
-          pieceRadius);
+      const rightButton = s.path(getLeftFacingTrianglePath(
+        topOffset + 640,
+        (80*rowIndex) + topOffset , 
+        30,
+        40
+      ));
 
       rightButton.attr({
         fill: buttonFillColor,
