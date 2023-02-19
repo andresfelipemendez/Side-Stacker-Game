@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import classes from '../App.css';
+
 import {
     Card,
     Form,
@@ -14,11 +14,13 @@ import {
 
 export default function CreateGame() {
     const [gameName, setGameName] = useState("");
-    const [gameStatus, setGameStatus] = useState("");
+    const [createStatus, setCreateStatus] = useState("New Game");
     const navigate = useNavigate();
 
     async function createGame(e) {
         e.preventDefault();
+        setCreateStatus("Creating game...");
+
         console.log(" before send createGame");
 
         await fetch("http://localhost:5000/games/add", {
@@ -27,19 +29,17 @@ export default function CreateGame() {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                game_name: gameName,
-                game_status: gameStatus
+                game_name: gameName
             }),
         })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log("Success:", data);
-                navigate("/");
-            })
-            .catch((error) => {
-                console.error("Error:", error);
-            });
-
+        .then(async (data) => {
+            const game = await data.json();
+            console.log("Success:", game);
+            navigate("/game/" + game.id);
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+        });
 
         console.log("after createGame");
     }
@@ -47,7 +47,7 @@ export default function CreateGame() {
     return (
         <Card className="mt-3">
             <Container>
-                <Row className="mt-3"> 
+                <Row className="mt-3">
                     <h3>Create New Game</h3>
                 </Row>
                 <Form onSubmit={createGame} className="mt-3">
@@ -65,11 +65,11 @@ export default function CreateGame() {
                             />
                         </Col>
                         <Col sm={3}>
-                        <Input
-                            type="submit"
-                            value="New Game"
-                            className="btn btn-primary"
-                        />
+                            <Input
+                                type="submit"
+                                value={createStatus}
+                                className="btn btn-primary"
+                            />
                         </Col>
                     </FormGroup>
                 </Form>

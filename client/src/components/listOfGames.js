@@ -1,8 +1,7 @@
 import React, { useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import CreateGame from "./createGame";
 import {
-  Collapse,
   Card,
   Table,
   Button,
@@ -12,16 +11,17 @@ import {
 } from 'reactstrap';
 
 function GameRow(props) {
-  const navigate = useNavigate();
-  function clickMe() {
-    console.log("clicked", props);
-    navigate("/game/" + props.game.id);
-  };
+  // const navigate = useNavigate();
+
+  // function clickMe() {
+  //   console.log("clicked", props);
+  //   navigate("/game/" + props.game.id);
+  // };
 
   return (
     <tr key={props.game.id}>
-      <td>{props.game.game_name}</td>
-      <td>{props.game.game_status}</td>
+      <td>{props.game.name}</td>
+      <td>{props.game.status}</td>
       <td>
         <ButtonGroup>
           <Button color="primary" outline>
@@ -52,19 +52,11 @@ export default function ListOfGames() {
     }
     getGames();
     return;
-  }, [games.length]);
-
-  async function deleteGame(id) {
-    await fetch(`http://localhost:5000/${id}`, {
-      method: "DELETE",
-    });
-    const newGames = games.filter((el) => el._id !== id);
-    setGames(newGames);
-  }
+  }, []);
 
   function gameList() {
     return games.map((game) => {
-      return <GameRow game={game} deleteGame={deleteGame} key={game.id} />;
+      return <GameRow game={game} key={game.id} />;
     });
   }
 
@@ -74,13 +66,10 @@ export default function ListOfGames() {
       <Row>
         <CreateGame />
       </Row>
-
       <Row>
         <Card className="mt-3">
         <Container>
-
         <h3 className="mt-3">Running Games</h3>
-      
         <Table className="table mt-3">
           <thead className="thead-light" >
             <tr>

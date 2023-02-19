@@ -14,19 +14,11 @@ const io = new Server(server, {
 });
 
 app.use(express.json());
-app.use(require("./routes/record"));
+app.use(require("./src/routes"));
 
-const dbo = require("./db/conn");
 const sideStacker = require("./src/sideStacker");
 
-
-
 app.listen(port, () => {
-  console.log(`Server is running on port: ${port}`);
-  dbo.connectToServer(function (err) {
-    if (err) console.error(err);
-  });
-
   console.log(`Server is running on port: ${port}`);
 });
 
