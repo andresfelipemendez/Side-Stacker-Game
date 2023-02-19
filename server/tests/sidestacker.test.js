@@ -6,6 +6,7 @@ const {
   getHorizontalAdjacentPieces,
   getVerticalAdjacentPieces,
   getForwardDiagonalAdjacentPieces,
+  getBackwardDiagonalAdjacentPieces,
   getTopLeft,
   getBottomLeft,
   getTopRight,
@@ -403,6 +404,36 @@ describe("get played adjacent forward diagonal pieces", () => {
       column: board[row].leftIndex,
     };
     const forwardDiagonalPieces = getForwardDiagonalAdjacentPieces(board, move);
+    expect(forwardDiagonalPieces.length).toBe(7);
+    const expectedArray = [0,0,0,"o",0,0,0];
+    expect(forwardDiagonalPieces).toEqual(expectedArray);
+  });
+
+  test("backward diagonal 6,6", () => {
+    const row = 6;
+    board[row] = stackRight(board[row], "o");
+    expect(board[row].rightIndex).toBe(6);
+    expect(board[row].rightCount).toBe(1);
+    const move = {
+      row: row,
+      column: board[row].rightIndex,
+    };
+    const forwardDiagonalPieces = getBackwardDiagonalAdjacentPieces(board, move);
+    expect(forwardDiagonalPieces.length).toBe(4);
+    const expectedArray = [0,0,0,"o"];
+    expect(forwardDiagonalPieces).toEqual(expectedArray);
+  });
+
+  test("backward diagonal 3,3", () => {
+    const row = 3;
+    board[row] = stackLeft(board[row], "o");
+    expect(board[row].leftIndex).toBe(3);
+    expect(board[row].leftCount).toBe(4);
+    const move = {
+      row: row,
+      column: board[row].leftIndex,
+    };
+    const forwardDiagonalPieces = getBackwardDiagonalAdjacentPieces(board, move);
     expect(forwardDiagonalPieces.length).toBe(7);
     const expectedArray = [0,0,0,"o",0,0,0];
     expect(forwardDiagonalPieces).toEqual(expectedArray);

@@ -166,6 +166,19 @@ module.exports = {
 
     return adjacentPieces;
   },
+  getBackwardDiagonalAdjacentPieces: (board, move) => {
+    let adjacentPieces = [];
+
+    var topLeft = module.exports.getTopLeft(move.row, move.column);
+    var bottomRight = module.exports.getBottomRight(move.row, move.column);
+    while (topLeft.top <= bottomRight.bottom) {
+      adjacentPieces.push(board[topLeft.top].row[topLeft.left]);
+      topLeft.top++;
+      topLeft.left++;
+    }
+
+    return adjacentPieces;
+  },
   getBottomLeft: (row, column) => {
     let length = GetCappedBottomLeftLength(row, column);
     return {
