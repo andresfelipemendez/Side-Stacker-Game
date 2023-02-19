@@ -38,3 +38,11 @@ svg circle {
     cursor: pointer;
     text-align: center;
 }
+
+.interactiveIcon {
+    cursor: pointer;
+}
+
+.disabledIcon {
+    cursor: pointer;
+}

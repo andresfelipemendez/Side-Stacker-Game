@@ -3,6 +3,7 @@ import styles from "./board.module.css";
 import Snap from "snapsvg-cjs";
 
 function getRightFacingTrianglePath(x, y, width, height) {
+
   return Snap.format("M {centerRight} {y} L {left} {bottom} L {left} {top} Z", {
     x: x,
     y: y,
@@ -25,7 +26,8 @@ function getLeftFacingTrianglePath(x, y, width, height) {
 }
 
 export default function Board({ board, player, sendPlayerMove }) {
-  
+  const [hoverState, setHoverState] = useState(board);
+
   useEffect(() => {
     var s = Snap("#svg");
     const pieceRadius = 30;
@@ -58,6 +60,7 @@ export default function Board({ board, player, sendPlayerMove }) {
       }
     }
 
+    const hoverColor = enabled ? "#FAB500" : "#BBB";
     const buttonFillColor = enabled ? "#FFE56B" : "#DDD";
     const buttonBorderColor = enabled ? "#FFE56B" : "#EEE";
 
@@ -71,12 +74,28 @@ export default function Board({ board, player, sendPlayerMove }) {
       leftButton.attr({
         fill: buttonFillColor,
         stroke: buttonBorderColor,
-        strokeWidth: strokeWidth
+        strokeWidth: strokeWidth,
+        class: styles.interactiveIcon,
+        side: "right",
+        row: rowIndex
       });
 
       leftButton.click((e) => {
         if(!enabled) return;
         sendPlayerMove({ rowIndex, side: 'left', player: player });
+      });
+
+      leftButton.hover((e) => {
+        console.log(
+          e.target.getAttribute("side"),
+          e.target.getAttribute("row"),
+        );
+
+        e.target.setAttribute("fill", hoverColor)
+        setHoverState(true);
+      },
+      () => {
+        setHoverState(false);
       });
 
       const rightButton = s.path(getLeftFacingTrianglePath(
@@ -90,11 +109,26 @@ export default function Board({ board, player, sendPlayerMove }) {
         fill: buttonFillColor,
         stroke: buttonBorderColor,
         strokeWidth: strokeWidth,
-        
+        class: styles.interactiveIcon,
+        side: "right",
+        row: rowIndex
       });
 
       rightButton.click(() => {
         sendPlayerMove({ rowIndex, side: 'right', player: player });
+      });
+
+      rightButton.hover((e) => {
+        console.log(
+          e.target.getAttribute("side"),
+          e.target.getAttribute("row"),
+        );
+
+        e.target.setAttribute("fill", hoverColor)
+        setHoverState(true);
+      },
+      () => {
+        setHoverState(false);
       });
       
       row.row.map((value, columnIndex) => {
@@ -126,7 +160,7 @@ export default function Board({ board, player, sendPlayerMove }) {
       });
       
     });
-}, [board]);
+}, [board, hoverState]);
 
   return (
     <div style={styles}>
