@@ -441,32 +441,6 @@ describe("get played adjacent forward diagonal pieces", () => {
 });
 
 
-describe("get played adjacent backward diagonal pieces", () => {
-  
-});
-
-describe("win condition", () => {
-  test("empty board", () => {
-    const board = createBoard();
-    const expectedBoard = [
-      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
-      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
-      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
-      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
-      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
-      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
-      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
-    ];
-    const firsRow = 0;
-    const stackedLeft = stackLeft(board[firsRow], "o");
-    const move = {
-      row: firsRow,
-      col: stackedLeft.leftCount,
-    };
-    expect(isWinningMove(move, board)).toBe(false);
-  });
-});
-
 describe("win conditions", () => {
   test("win condition 0", () => {
     const row = [0,0,0,0,0];
@@ -503,3 +477,66 @@ describe("win conditions", () => {
     expect(res.winner).toBe(1);
   });
 });
+
+
+describe("win conditions", () => {
+  test("empty board", () => {
+    const board = [
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+    ];
+    const firstRow = 0;
+    board[firstRow] = stackLeft(board[firstRow], "o");
+    const move = {
+      row: firstRow,
+      column: board[firstRow].leftIndex, // 0 base index
+    };
+    expect(isWinningMove(board, move)).toBe(false);
+  });
+
+  test("horizontal left", () => {
+    let board = [
+      { row: ['o', 'o', 'o', 0, 0, 0, 0], leftCount: 3, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+    ];
+    const firstRow = 0;
+    board[firstRow] = stackLeft(board[firstRow], "o");
+    const move = {
+      row: firstRow,
+      column: board[firstRow].leftIndex, // 0 base index
+    };
+
+    expect(isWinningMove(board, move)).toBe(true);
+  });
+
+  test("horizontal right", () => {
+    let board = [
+      { row: ['o', 'o', 'o', 0, 'o', 'o', 'o'], leftCount: 3, rightCount: 3 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+    ];
+    const firstRow = 0;
+    board[firstRow] = stackRight(board[firstRow], "o");
+    const move = {
+      row: firstRow,
+      column: board[firstRow].rightIndex, // 0 base index
+    };
+
+    expect(isWinningMove(board, move)).toBe(true);
+  });
+});
+

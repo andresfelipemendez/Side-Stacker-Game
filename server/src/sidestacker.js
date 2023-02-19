@@ -48,7 +48,7 @@ function GetCappedBottomLeftLength(row, column) {
 }
 
 function GetCappedTopLeftLength(row, column) {
-  let diagDistance = row < column ? top : column;
+  let diagDistance = row < column ? row : column;
   return diagDistance < winningLengthMinusOne
     ? diagDistance
     : winningLengthMinusOne;
@@ -97,7 +97,6 @@ module.exports = {
     board[rowIndex] = row;
     return board;
   },
-  
   winCondition: (line) => {
     const pieces = accumulatePieces(line);
     return {
@@ -213,7 +212,21 @@ module.exports = {
       right: right,
     }
   },
-  isWinningMove(player, board) {
-    return false;
+  isWinningMove(board, move) {
+    const horizontal = module.exports.getHorizontalAdjacentPieces(board, move);
+    const vertical = module.exports.getVerticalAdjacentPieces(board, move);
+    const forwardDiagonal = module.exports.getForwardDiagonalAdjacentPieces(
+      board,
+      move
+    );
+    const backwardDiagonal = module.exports.getBackwardDiagonalAdjacentPieces(
+      board,
+      move
+    );
+    const horizontalWin = module.exports.winCondition(horizontal);
+    const verticalWin = module.exports.winCondition(vertical);
+    const forwardDiagonalWin = module.exports.winCondition(forwardDiagonal);
+    const backwardDiagonalWin = module.exports.winCondition(backwardDiagonal);
+    return horizontalWin.win || verticalWin.win || forwardDiagonalWin.win || backwardDiagonalWin.win;
   },
 };
