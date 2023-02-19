@@ -113,6 +113,24 @@ module.exports = {
         id: move.gameId  
       }
     }).then((gameInstance) => {
+      switch (gameInstance.gameState) {
+        case "newGame": {
+          if(move.player === "1") {
+            gameInstance.gameState = "player2Turn";
+          } else {
+            return callback(null, "player 1 must start the game");
+          }
+          break;
+        }
+        case "player1Turn": {
+          gameInstance.gameState = "player2Turn";
+          break;
+        }
+        case "player2Turn": {
+          gameInstance.gameState = "player1Turn";
+          break;
+        }
+      }
 
       console.log("game found", gameInstance.board[move.rowIndex]);
 
@@ -122,7 +140,9 @@ module.exports = {
         move.side, 
         move.player
       );
-      gameInstance.lastPlayerToMove = move.player;
+      
+
+      
       gameInstance.board[move.rowIndex] = newBoard[move.rowIndex];
       gameInstance.changed('board', true);
       gameInstance.save().then((updatedGame) => {

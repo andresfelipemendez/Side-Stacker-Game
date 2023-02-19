@@ -50,11 +50,11 @@ export default function Game() {
           setPlayerTurnTitle(playerId === "1");
           break;
         }
-        case "player1": {
+        case "player1Turn": {
           setPlayerTurnTitle(playerId === "1");
           break;
         }
-        case "player2":{
+        case "player2Turn":{
           setPlayerTurnTitle(playerId === "2");
           break;
         }

@@ -18,11 +18,11 @@ export default function Board({ board, player, sendPlayerMove }) {
         enabled = player === "1" ? true : false;
         break;
       }
-      case "player1": {
+      case "player1Turn": {
         enabled = player === "1" ? true : false;
         break;
       }
-      case "player2":{
+      case "player2Turn":{
         enabled = player === "2" ? true : false;
         break;
       }
@@ -35,8 +35,6 @@ export default function Board({ board, player, sendPlayerMove }) {
         break;
       }
     }
-
-    
 
     const buttonFillColor = enabled ? "#FFE56B" : "#DDD";
     const buttonBorderColor = enabled ? "#FFE56B" : "#EEE";
