@@ -12,7 +12,32 @@ export default function Board({ board, player, sendPlayerMove }) {
     const topOffset = pieceRadius + strokeWidth;
     console.log("board", player);
 
-    const enabled = board.lastPlayerToMove === player ? false : true;
+    let enabled = false;
+    switch(board.gameState) {
+      case "newGame": {
+        enabled = player === "1" ? true : false;
+        break;
+      }
+      case "player1": {
+        enabled = player === "1" ? true : false;
+        break;
+      }
+      case "player2":{
+        enabled = player === "2" ? true : false;
+        break;
+      }
+      case "player1won":{
+        enabled = false;
+        break;
+      }
+      case "player2won":{
+        enabled = false;
+        break;
+      }
+    }
+
+    
+
     const buttonFillColor = enabled ? "#FFE56B" : "#DDD";
     const buttonBorderColor = enabled ? "#FFE56B" : "#EEE";
 

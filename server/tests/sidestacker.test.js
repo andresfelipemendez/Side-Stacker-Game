@@ -9,6 +9,7 @@ const {
   getBottomLeft,
   getTopRight,
   isWinningMove,
+  winCondition,
 } = require("../src/sideStacker.js");
 
 it("should create a new board with 7 rows and 7 columns", () => {
@@ -323,6 +324,43 @@ describe("diagonal functions", () => {
   });
 });
 
+describe("win conditions", () => {
+  test("win condition 0", () => {
+    const row = [0,0,0,0,0];
+    const res = winCondition(row);
+    expect(res.win).toBe(false);
+    expect(res.winner).toBe(0);
+  });
+
+  test("win condition 1", () => {
+    const row = [1,1,1,1,1];
+    const res = winCondition(row);
+    expect(res.win).toBe(true);
+    expect(res.winner).toBe(1);
+  });
+
+  test("win condition 1", () => {
+    const row = [2,2,2,1,1];
+    const res = winCondition(row);
+    expect(res.win).toBe(false);
+    expect(res.winner).toBe(0);
+  });
+
+  test("win condition 1", () => {
+    const row = [2,2,2,0,1,0,0,0,1,1,1,0,0,0,1,0,0,0,0,1,0,1];
+    const res = winCondition(row);
+    expect(res.win).toBe(false);
+    expect(res.winner).toBe(0);
+  });
+
+  test("win condition 1", () => {
+    const row = [2,2,2,0,1,0,0,0,1,1,1,1,0,0,1,0,0,0,0,1,0,1];
+    const res = winCondition(row);
+    expect(res.win).toBe(true);
+    expect(res.winner).toBe(1);
+  });
+});
+
 /*
 describe("get played adjacent forward diagonal pieces", () => {
   let board = [
@@ -348,7 +386,9 @@ describe("get played adjacent forward diagonal pieces", () => {
 });
 */
 
-describe("get played adjacent backward diagonal pieces", () => {});
+describe("get played adjacent backward diagonal pieces", () => {
+  
+});
 
 describe("win condition", () => {
   test("empty board", () => {

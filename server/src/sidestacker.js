@@ -47,6 +47,33 @@ function GetCappedBottomLeftLength(row, column) {
     : winningLengthMinusOne;
 }
 
+function GetCappedTopLeftLength(row, column) {
+
+}
+
+function accumulatePieces(line) {
+  return line.reduce((acc, curr) => {
+    console.log(acc, curr);
+    if (curr !== acc.current) {
+      if(acc.currentLength > acc.max) {
+        acc.max = acc.currentLength;
+        acc.piece = acc.current;
+      }
+      acc.current = curr;
+      acc.currentLength = 1;
+    } else if(curr !== 0) {
+      acc.currentLength++;
+    }
+    
+    if(acc.currentLength > acc.max) 
+    {
+      acc.max = acc.currentLength;
+      acc.piece = acc.current;
+    }
+    return acc;
+  }, {current: line[0], currentLength: 0, max: 0, piece: line[0]});
+}
+
 module.exports = {
   move: (board, rowIndex, side, player) => {
     let row = board[rowIndex];
@@ -57,6 +84,14 @@ module.exports = {
     }
     board[rowIndex] = row;
     return board;
+  },
+  
+  winCondition: (line) => {
+    const pieces = accumulatePieces(line);
+    return {
+      win: pieces.max >= winningLength,
+      winner: pieces.max >= winningLength ? pieces.piece : 0
+    }
   },
   createBoard: () => {
     const board = [];

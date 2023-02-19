@@ -43,19 +43,20 @@ const Game = _db.define("Game", {
   duration: {
     type: Sequelize.INTEGER
   },
+  gameState: {
+    type: Sequelize.ENUM(
+      "newGame", 
+      "player1Turn",
+      "player2Turn",
+      "player1won",
+      "player2won",
+    ),
+    allowNull: false,
+  },
   player1: {
     type: Sequelize.STRING
   },
   player2: {
-    type: Sequelize.STRING
-  },
-  lastPlayerToMove: {
-    type: Sequelize.STRING
-  },
-  winner: {
-    type: Sequelize.STRING
-  },
-  loser: {
     type: Sequelize.STRING
   },
   board: {
@@ -77,7 +78,7 @@ module.exports = {
       status: "active",
       start_time: _db.fn("NOW"),
       player1: "true",
-      lastPlayerToMove: "2", // player1 starts
+      gameState: "newGame",
       board: sideStacker.createBoard()
     }).then((game) => {
       console.log("Game created successfully");

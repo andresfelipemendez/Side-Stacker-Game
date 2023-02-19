@@ -8,7 +8,7 @@ export default function Game() {
   const params = useParams();
   const socket = useContext(SocketContext);
   const playerId = params.playerId;
-  const [playerTurn, setPlayerTurn] = useState("Waiting for other player");
+  const [playerTurn, setPlayerTurn] = useState("Loading...");
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [board, setBoard] = useState(
     { 
@@ -24,11 +24,17 @@ export default function Game() {
       ]
     }
   );
+  
+  const setPlayerTurnTitle = (itsMyTurn) => {
+    if(itsMyTurn) {
+      setPlayerTurn("its your turn")
+    } else {
+      setPlayerTurn("waiting for other player")
+    }
+  }
 
   useEffect(() => {
     socket.on('connect', () => {
-      console.log("connect", params);
-
       socket.emit('getBoard', { 
         gameId: params.id,
         playerId: params.playerId
@@ -38,7 +44,22 @@ export default function Game() {
     });
 
     socket.on("updateBoard", (newBoard) => {
-      setPlayerTurn(newBoard.lastPlayerToMove === playerId ? "Waiting for other player" : "Your turn");
+      console.log("updateBoard", newBoard);
+      switch(newBoard.gameState) {
+        case "newGame": {
+          setPlayerTurnTitle(playerId === "1");
+          break;
+        }
+        case "player1": {
+          setPlayerTurnTitle(playerId === "1");
+          break;
+        }
+        case "player2":{
+          setPlayerTurnTitle(playerId === "2");
+          break;
+        }
+      }
+    
       setBoard(newBoard);
     });
 
