@@ -12,6 +12,8 @@ export default function Board({ board, sendPlayerMove }) {
     const strokeWidth = 3;
     const leftOffset = pieceRadius + strokeWidth + 80;
     const topOffset = pieceRadius + strokeWidth;
+    if(board.length === 0) 
+      return;
     board.map((row, rowIndex) => {
       const leftButton = s.circle(
         topOffset,
@@ -24,8 +26,7 @@ export default function Board({ board, sendPlayerMove }) {
         strokeWidth: strokeWidth
       });
 
-      leftButton.click((e) => {  
-        console.log("leftButton click " + rowIndex);
+      leftButton.click((e) => {
         sendPlayerMove({ rowIndex, side: 'left', player: player });
         setPlayer(player === "x" ? "o" : "x");
       });
@@ -41,14 +42,12 @@ export default function Board({ board, sendPlayerMove }) {
             strokeWidth: strokeWidth
           });
 
-      rightButton.click((e) => {
-        
-        console.log("right click " + rowIndex);
+      rightButton.click(() => {
         sendPlayerMove({ rowIndex, side: 'right', player: player });
         setPlayer(player === "x" ? "o" : "x");
       });
-        
-      row.map((value, columnIndex) => {
+      
+      row.row.map((value, columnIndex) => {
         const piece = s.circle(
           (80*columnIndex) + leftOffset, 
           (80*rowIndex) + topOffset, 
@@ -83,8 +82,6 @@ export default function Board({ board, sendPlayerMove }) {
     <div style={styles}>
       <svg
         id="svg"
-        // height="80vh"
-        // width="80vw"
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
       />

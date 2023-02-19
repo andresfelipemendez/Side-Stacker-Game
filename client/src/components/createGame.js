@@ -35,7 +35,7 @@ export default function CreateGame() {
         .then(async (data) => {
             const game = await data.json();
             console.log("Success:", game);
-            navigate("/game/" + game.id);
+            navigate("/game/" + game.id + "/player/1");
         })
         .catch((error) => {
             console.error("Error:", error);

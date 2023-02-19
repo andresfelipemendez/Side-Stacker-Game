@@ -1,4 +1,5 @@
 const Sequelize = require("sequelize");
+const sideStacker = require("./sideStacker");
 const { DB_NAME, DB_USERNAME, DB_PASSWORD, DB_HOST, dialect } = process.env;
 
 const _db = new Sequelize(DB_NAME, DB_USERNAME, DB_PASSWORD, {
@@ -54,6 +55,9 @@ const Game = _db.define("Game", {
   loser: {
     type: Sequelize.STRING
   },
+  board: {
+    type: Sequelize.JSONB
+  }
 })
 
 _db.sync().then(() => {
@@ -69,7 +73,8 @@ module.exports = {
       name: gameName,
       status: "active",
       start_time: _db.fn("NOW"),
-      player1: "true"
+      player1: "true",
+      board: sideStacker.createBoard()
     }).then((game) => {
       console.log("Game created successfully");
       callback(game, null);
@@ -77,7 +82,6 @@ module.exports = {
       console.log("error", error)
       callback(null, error);
     });
-
   },
   getGames: (callback) => {
     _db.models.Game.findAll()
@@ -86,5 +90,61 @@ module.exports = {
       })
       .catch((error) => callback(null, error));
   },
+  getGame: (gameId, callback) => {
+    console.log("find gameId in db", gameId);
+
+    _db.models.Game.findOne({
+      where: {
+        id: gameId
+      }
+    }).then((game) => {
+      callback(game, null);
+    }).catch((error) => {
+      callback(null, error)
+    });
+  },
+  updateBoard: (move, callback) => {
+    _db.models.Game.findOne({
+      where:{
+        id: move.gameId  
+      }
+    }).then((gameInstance) => {
+
+      console.log("game found", gameInstance.board[move.rowIndex]);
+
+      const newBoard = sideStacker.move(
+        gameInstance.board, 
+        move.rowIndex, 
+        move.side, 
+        move.player
+      );
+      gameInstance.board[move.rowIndex] = newBoard[move.rowIndex];
+      gameInstance.changed('board', true);
+      gameInstance.save().then((updatedGame) => {
+        console.log("board updated", updatedGame.board[move.rowIndex]);
+        callback(updatedGame.board, null);
+      });
+    }).catch((error) => {
+      callback(null, error)
+    });
+
+    //Board.board
+    /*
+    model.yourJsonB.userName = "Lisa" // traditional prop change
+    model.changed("yourJsonB", true)   
+    // << forces sequelize to understand this json has been updated
+    await model.save()
+    */
+
+    // _db.models.Board.update({
+    //   board: board
+    // }, {
+    //   where: {
+    //     id: gameId
+    //   }
+    // }).then((board) => {
+    //   callback(board, null);
+    // }).catch((error) => callback(null, error));
+  }
 
 };

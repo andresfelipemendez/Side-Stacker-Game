@@ -9,21 +9,25 @@ export default function Game() {
   const socket = useContext(SocketContext);
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [board, setBoard] = useState([
-    ["_", "_", "_", "_", "_", "_", "_"],
-    ["_", "x", "_", "_", "_", "_", "o"],
-    ["x", "_", "_", "_", "_", "x", "x"],
-    ["x", "_", "_", "_", "_", "_", "o"],
-    ["o", "_", "_", "_", "_", "_", "_"],
-    ["_", "_", "_", "_", "_", "_", "_"],
-    ["_", "_", "_", "_", "_", "_", "_"]
+    {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0},
+    {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0},
+    {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0},
+    {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0},
+    {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0},
+    {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0},
+    {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0}
   ]);
 
   useEffect(() => {
-    socket.on('connect', (io) => {
-      console.log("connect", io, params);
-      
-      
-      socket.emit('ping', { gameId: params.id });
+    socket.on('connect', () => {
+
+      console.log("connect", params);
+
+      socket.emit('getBoard', { 
+        gameId: params.id,
+        playerId: params.playerId
+      });
+
       setIsConnected(true);
     });
 
@@ -36,24 +40,18 @@ export default function Game() {
       setIsConnected(false);
     });
 
-    socket.on('pong', () => {
-      console.log("pong")
-    });
-
     return () => {
       socket.off('connect');
+      socket.off('updateBoard');
       socket.off('disconnect');
-      socket.off('pong');
     };
   }, [params, socket]);
 
   const sendPlayerMove = ({rowIndex, side, player}) => {
-    //e.preventDefault();
-    // const rowIndex = e.target.getAttribute("row");
-    // const side = e.target.getAttribute("side");
-    console.log("sendPlayerMove", { rowIndex, side, player });
-    socket.emit("playerMove", { rowIndex, side, player });
-  }
+    const gameId = params.id;
+    console.log("sendPlayerMove", { gameId, rowIndex, side, player });
+    socket.emit("playerMove", {  gameId, rowIndex, side, player });
+  };
 
   return (
     <div>

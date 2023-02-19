@@ -68,13 +68,6 @@ module.exports = {
     }
     return board;
   },
-  getStrippedBoard(board){
-    let strippedBoard = [];
-    for (let i = 0; i < board.length; i++) {
-      strippedBoard.push(board[i].row);
-    }
-    return strippedBoard;
-  },
   stackRight: (row, player) => {
     if (IsRowFull(row)) return row;
     row.rightIndex = boardWidth - row.rightCount;
