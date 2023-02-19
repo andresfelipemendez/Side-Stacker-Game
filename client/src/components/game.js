@@ -7,32 +7,38 @@ import Board from "./board";
 export default function Game() {
   const params = useParams();
   const socket = useContext(SocketContext);
+  const playerId = params.playerId;
+  const [playerTurn, setPlayerTurn] = useState("Waiting for other player");
   const [isConnected, setIsConnected] = useState(socket.connected);
-  const [board, setBoard] = useState([
-    {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0},
-    {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0},
-    {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0},
-    {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0},
-    {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0},
-    {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0},
-    {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0}
-  ]);
+  const [board, setBoard] = useState(
+    { 
+      board:
+      [
+        {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0},
+        {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0},
+        {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0},
+        {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0},
+        {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0},
+        {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0},
+        {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0}
+      ]
+    }
+  );
 
   useEffect(() => {
     socket.on('connect', () => {
-
       console.log("connect", params);
 
       socket.emit('getBoard', { 
         gameId: params.id,
         playerId: params.playerId
       });
-
+      
       setIsConnected(true);
     });
 
     socket.on("updateBoard", (newBoard) => {
-      console.log("updateBoard", newBoard);
+      setPlayerTurn(newBoard.lastPlayerToMove === playerId ? "Waiting for other player" : "Your turn");
       setBoard(newBoard);
     });
 
@@ -45,7 +51,7 @@ export default function Game() {
       socket.off('updateBoard');
       socket.off('disconnect');
     };
-  }, [params, socket]);
+  }, []);
 
   const sendPlayerMove = ({rowIndex, side, player}) => {
     const gameId = params.id;
@@ -55,8 +61,8 @@ export default function Game() {
 
   return (
     <div>
-      <h3>Game</h3>
-      <Board board={board} sendPlayerMove={sendPlayerMove} />
+      <h3>{playerTurn}</h3>
+      <Board board={board} player={playerId} sendPlayerMove={sendPlayerMove} />
     </div>
   );
 }

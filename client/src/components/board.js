@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import styles from "./board.module.css";
 import Snap from "snapsvg-cjs";
 
-export default function Board({ board, sendPlayerMove }) {
-  const [player, setPlayer] = useState("x");
-
+export default function Board({ board, player, sendPlayerMove }) {
   
   useEffect(() => {
     var s = Snap("#svg");
@@ -12,23 +10,27 @@ export default function Board({ board, sendPlayerMove }) {
     const strokeWidth = 3;
     const leftOffset = pieceRadius + strokeWidth + 80;
     const topOffset = pieceRadius + strokeWidth;
-    if(board.length === 0) 
-      return;
-    board.map((row, rowIndex) => {
+    console.log("board", player);
+
+    const enabled = board.lastPlayerToMove === player ? false : true;
+    const buttonFillColor = enabled ? "#FFE56B" : "#DDD";
+    const buttonBorderColor = enabled ? "#FFE56B" : "#EEE";
+
+    board.board.map((row, rowIndex) => {
       const leftButton = s.circle(
         topOffset,
         (80*rowIndex) + topOffset, 
         pieceRadius);
       
       leftButton.attr({
-        fill: "#FFE56B",
-        stroke: "#FFE56B",
+        fill: buttonFillColor,
+        stroke: buttonBorderColor,
         strokeWidth: strokeWidth
       });
 
       leftButton.click((e) => {
+        if(!enabled) return;
         sendPlayerMove({ rowIndex, side: 'left', player: player });
-        setPlayer(player === "x" ? "o" : "x");
       });
 
       const rightButton = s.circle(
@@ -36,15 +38,15 @@ export default function Board({ board, sendPlayerMove }) {
           (80*rowIndex) + topOffset , 
           pieceRadius);
 
-          rightButton.attr({
-            fill: "#FFE56B",
-            stroke: "#FFE56B",
-            strokeWidth: strokeWidth
-          });
+      rightButton.attr({
+        fill: buttonFillColor,
+        stroke: buttonBorderColor,
+        strokeWidth: strokeWidth,
+        
+      });
 
       rightButton.click(() => {
         sendPlayerMove({ rowIndex, side: 'right', player: player });
-        setPlayer(player === "x" ? "o" : "x");
       });
       
       row.row.map((value, columnIndex) => {
@@ -53,14 +55,14 @@ export default function Board({ board, sendPlayerMove }) {
           (80*rowIndex) + topOffset, 
           pieceRadius);
         
-        if (value === "x") {
+        if (value === "1") {
           piece.attr({
             fill: "#651234",
             stroke: "#1E1D12",
             strokeWidth: strokeWidth
           });
         }
-        else if (value === "o") {
+        else if (value === "2") {
         piece.attr({
           fill: "#2C465E",
           stroke: "#1E1D12",

@@ -49,6 +49,9 @@ const Game = _db.define("Game", {
   player2: {
     type: Sequelize.STRING
   },
+  lastPlayerToMove: {
+    type: Sequelize.STRING
+  },
   winner: {
     type: Sequelize.STRING
   },
@@ -74,6 +77,7 @@ module.exports = {
       status: "active",
       start_time: _db.fn("NOW"),
       player1: "true",
+      lastPlayerToMove: "2", // player1 starts
       board: sideStacker.createBoard()
     }).then((game) => {
       console.log("Game created successfully");
@@ -92,7 +96,6 @@ module.exports = {
   },
   getGame: (gameId, callback) => {
     console.log("find gameId in db", gameId);
-
     _db.models.Game.findOne({
       where: {
         id: gameId
@@ -118,33 +121,15 @@ module.exports = {
         move.side, 
         move.player
       );
+      gameInstance.lastPlayerToMove = move.player;
       gameInstance.board[move.rowIndex] = newBoard[move.rowIndex];
       gameInstance.changed('board', true);
       gameInstance.save().then((updatedGame) => {
         console.log("board updated", updatedGame.board[move.rowIndex]);
-        callback(updatedGame.board, null);
+        callback(updatedGame, null);
       });
     }).catch((error) => {
       callback(null, error)
     });
-
-    //Board.board
-    /*
-    model.yourJsonB.userName = "Lisa" // traditional prop change
-    model.changed("yourJsonB", true)   
-    // << forces sequelize to understand this json has been updated
-    await model.save()
-    */
-
-    // _db.models.Board.update({
-    //   board: board
-    // }, {
-    //   where: {
-    //     id: gameId
-    //   }
-    // }).then((board) => {
-    //   callback(board, null);
-    // }).catch((error) => callback(null, error));
   }
-
 };

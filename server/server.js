@@ -16,9 +16,7 @@ const io = new Server(server, {
 app.use(express.json());
 app.use(require("./src/routes"));
 
-const sideStacker = require("./src/sideStacker");
 const db = require("./src/db");
-const { updateBoard } = require("./src/db");
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
@@ -32,23 +30,16 @@ server.listen(3001, () => {
 // when the player moves, wait for the other player to move
 // when the other player moves, update the board
 // when the game is over, update the database
-
-
 io.on("connection", (socket) => {
-  
   console.log("a user connected");
-  
   socket.on("getBoard", (params) => {
     console.log("a user requested a gameBoard", params);
     socket.join(params.gameId);
 
     db.getGame(params.gameId, (game,error) => {
        if(!error) {
-         console.log("returned game " + params.gameId, game.id);
-         
-         socket.emit("updateBoard", game.board);
+         socket.emit("updateBoard", game);
        } else {
-        console.log("error returning game " + params.gameId, error);
         socket.emit("updateBoard", {
           message: error
         });
@@ -58,9 +49,9 @@ io.on("connection", (socket) => {
 
   socket.on("playerMove", (move) => {
     console.log("a user made a move", move);
-    db.updateBoard(move, (updateBoard,error) => {
+    db.updateBoard(move, (updateGame,error) => {
       if(!error) {
-        io.sockets.in(move.gameId).emit("updateBoard", updateBoard);
+        io.sockets.in(move.gameId).emit("updateBoard", updateGame);
       } else {
         socket.emit("updateBoard", {
           message: error
@@ -68,5 +59,4 @@ io.on("connection", (socket) => {
       }
     });
   });
-
 });

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import CreateGame from "./createGame";
 import {
   Card,
@@ -11,12 +11,12 @@ import {
 } from 'reactstrap';
 
 function GameRow(props) {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  // function clickMe() {
-  //   console.log("clicked", props);
-  //   navigate("/game/" + props.game.id);
-  // };
+  function clickMe(e) {
+    console.log("clicked", e.target.getAttribute("player"));
+    navigate("/game/" + props.game.id + "/player/" + e.target.getAttribute("player"));
+  };
 
   return (
     <tr key={props.game.id}>
@@ -24,10 +24,10 @@ function GameRow(props) {
       <td>{props.game.status}</td>
       <td>
         <ButtonGroup>
-          <Button color="primary" outline>
+          <Button color="primary" onClick={clickMe} player="1" outline>
             Player 1
           </Button>
-          <Button color="primary" outline>
+          <Button color="primary" onClick={clickMe} player="2" outline>
             Player 2
           </Button>
         </ButtonGroup>
