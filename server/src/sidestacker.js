@@ -48,8 +48,20 @@ function GetCappedBottomLeftLength(row, column) {
 }
 
 function GetCappedTopLeftLength(row, column) {
-
+  let diagDistance = row < column ? top : column;
+  return diagDistance < winningLengthMinusOne
+    ? diagDistance
+    : winningLengthMinusOne;
 }
+
+function GetCappedBottomRightLength(row, column) {
+  let distanceRight = boardWidth - column;
+  let distanceBottom = boardHeight - row;
+  let diagDistance = distanceRight < distanceBottom ? distanceRight : distanceBottom;
+  return diagDistance < winningLengthMinusOne ? diagDistance : winningLengthMinusOne;
+}
+
+
 
 function accumulatePieces(line) {
   return line.reduce((acc, curr) => {
@@ -144,16 +156,14 @@ module.exports = {
   getForwardDiagonalAdjacentPieces: (board, move) => {
     let adjacentPieces = [];
 
-    const { cappedBottom, cappedLeft } = getBottomLeft(move);
-    const { cappedTop, cappedRight } = getTopRight(move);
-
-    let i = cappedTop;
-    let j = cappedLeft;
-    while (i <= cappedBottom && j <= cappedRight) {
-      adjacentPieces.push(board[i].row[j]);
-      i++;
-      j++;
+    var bottomLeft = module.exports.getBottomLeft(move.row, move.column);
+    var topRight = module.exports.getTopRight(move.row, move.column);
+    while (bottomLeft.bottom >= topRight.top) {
+      adjacentPieces.push(board[bottomLeft.bottom].row[bottomLeft.left]);
+      bottomLeft.bottom--;
+      bottomLeft.left++;
     }
+
     return adjacentPieces;
   },
   getBottomLeft: (row, column) => {
@@ -163,7 +173,6 @@ module.exports = {
       left: column - length,
     };
   },
-
   getTopRight: (row, column) => {
     let length = GetCappedTopRightLength(row, column);
     const top = row - length;
@@ -172,6 +181,24 @@ module.exports = {
       top: top,
       right: right,
     };
+  },
+  getTopLeft: (row, column) => {
+    let length = GetCappedTopLeftLength(row, column);
+    const top = row - length;
+    const left = column - length;
+    return {
+      top: top,
+      left: left,
+    };
+  },
+  getBottomRight: (row, column) => {
+    let length = GetCappedBottomRightLength(row, column);
+    const bottom = row + length;
+    const right = column + length;
+    return {
+      bottom: bottom,
+      right: right,
+    }
   },
   isWinningMove(player, board) {
     return false;
