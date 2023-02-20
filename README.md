@@ -10,3 +10,17 @@ The frontend allows each player to see the board and place moves that the other 
 The backend uses a relational database to store the game, and updates are made in real-time without the need to refresh the page.
 
 This project was built using the PERN (Postgres, Express, React, and Node.js) stack and Docker Compose for development and deployment.
+
+### Built With
+
+[![My Skills](https://skills.thijs.gg/icons?i=docker,nodejs,postgres,react)](https://skills.thijs.gg)
+
+# Getting started 
+
+## Prerequisites
+
+To run this project locally, you must first have the following installed:
+
+
+* [Docker](https://docs.docker.com/engine/installation/)
+* [docker-compose](https://docs.docker.com/compose/install/)

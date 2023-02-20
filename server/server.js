@@ -36,12 +36,12 @@ io.on("connection", (socket) => {
     console.log("a user requested a gameBoard", params);
     socket.join(params.gameId);
 
-    db.getGame(params.gameId, (game,error) => {
-       if(!error) {
-         socket.emit("updateBoard", game);
-       } else {
+    db.getGame(params.gameId, (game, error) => {
+      if (!error) {
+        socket.emit("updateBoard", game);
+      } else {
         socket.emit("updateBoard", {
-          message: error
+          message: error,
         });
       }
     });
@@ -49,12 +49,12 @@ io.on("connection", (socket) => {
 
   socket.on("playerMove", (move) => {
     console.log("a user made a move", move);
-    db.updateBoard(move, (updateGame,error) => {
-      if(!error) {
+    db.updateBoard(move, (updateGame, error) => {
+      if (!error) {
         io.sockets.in(move.gameId).emit("updateBoard", updateGame);
       } else {
         socket.emit("updateBoard", {
-          message: error
+          message: error,
         });
       }
     });

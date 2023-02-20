@@ -14,7 +14,7 @@ const {
   isWinningMove,
   winCondition,
   playLeft,
-  playRight
+  playRight,
 } = require("../src/sideStacker.js");
 
 it("should create a new board with 7 rows and 7 columns", () => {
@@ -348,7 +348,7 @@ describe("diagonal functions", () => {
   });
 
   test("get forward diagonal", () => {
-    getForwardDiagonalAdjacentPieces
+    getForwardDiagonalAdjacentPieces;
   });
 });
 
@@ -393,7 +393,7 @@ describe("get played adjacent forward diagonal pieces", () => {
     expect(move.column).toBe(0);
     expect(move.row).toBe(6);
     expect(forwardDiagonalPieces.length).toBe(4);
-    const expectedArray = ["o",0,0,0];
+    const expectedArray = ["o", 0, 0, 0];
     expect(forwardDiagonalPieces).toEqual(expectedArray);
   });
 
@@ -407,7 +407,7 @@ describe("get played adjacent forward diagonal pieces", () => {
     };
     const forwardDiagonalPieces = getForwardDiagonalAdjacentPieces(board, move);
     expect(forwardDiagonalPieces.length).toBe(7);
-    const expectedArray = [0,0,0,"o",0,0,0];
+    const expectedArray = [0, 0, 0, "o", 0, 0, 0];
     expect(forwardDiagonalPieces).toEqual(expectedArray);
   });
 
@@ -420,9 +420,12 @@ describe("get played adjacent forward diagonal pieces", () => {
       row: row,
       column: board[row].rightIndex,
     };
-    const forwardDiagonalPieces = getBackwardDiagonalAdjacentPieces(board, move);
+    const forwardDiagonalPieces = getBackwardDiagonalAdjacentPieces(
+      board,
+      move
+    );
     expect(forwardDiagonalPieces.length).toBe(4);
-    const expectedArray = [0,0,0,"o"];
+    const expectedArray = [0, 0, 0, "o"];
     expect(forwardDiagonalPieces).toEqual(expectedArray);
   });
 
@@ -435,51 +438,56 @@ describe("get played adjacent forward diagonal pieces", () => {
       row: row,
       column: board[row].leftIndex,
     };
-    const forwardDiagonalPieces = getBackwardDiagonalAdjacentPieces(board, move);
+    const forwardDiagonalPieces = getBackwardDiagonalAdjacentPieces(
+      board,
+      move
+    );
     expect(forwardDiagonalPieces.length).toBe(7);
-    const expectedArray = [0,0,0,"o",0,0,0];
+    const expectedArray = [0, 0, 0, "o", 0, 0, 0];
     expect(forwardDiagonalPieces).toEqual(expectedArray);
   });
 });
 
-
 describe("win conditions", () => {
   test("win condition 0", () => {
-    const row = [0,0,0,0,0];
+    const row = [0, 0, 0, 0, 0];
     const res = winCondition(row);
     expect(res.win).toBe(false);
     expect(res.winner).toBe(0);
   });
 
   test("win condition 1", () => {
-    const row = [1,1,1,1,1];
+    const row = [1, 1, 1, 1, 1];
     const res = winCondition(row);
     expect(res.win).toBe(true);
     expect(res.winner).toBe(1);
   });
 
   test("win condition 1", () => {
-    const row = [2,2,2,1,1];
+    const row = [2, 2, 2, 1, 1];
     const res = winCondition(row);
     expect(res.win).toBe(false);
     expect(res.winner).toBe(0);
   });
 
   test("win condition 1", () => {
-    const row = [2,2,2,0,1,0,0,0,1,1,1,0,0,0,1,0,0,0,0,1,0,1];
+    const row = [
+      2, 2, 2, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1,
+    ];
     const res = winCondition(row);
     expect(res.win).toBe(false);
     expect(res.winner).toBe(0);
   });
 
   test("win condition 1", () => {
-    const row = [2,2,2,0,1,0,0,0,1,1,1,1,0,0,1,0,0,0,0,1,0,1];
+    const row = [
+      2, 2, 2, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1,
+    ];
     const res = winCondition(row);
     expect(res.win).toBe(true);
     expect(res.winner).toBe(1);
   });
 });
-
 
 describe("win conditions", () => {
   test("empty board", () => {
@@ -503,7 +511,7 @@ describe("win conditions", () => {
 
   test("horizontal left", () => {
     let board = [
-      { row: ['o', 'o', 'o', 0, 0, 0, 0], leftCount: 3, rightCount: 0 },
+      { row: ["o", "o", "o", 0, 0, 0, 0], leftCount: 3, rightCount: 0 },
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
@@ -523,7 +531,7 @@ describe("win conditions", () => {
 
   test("horizontal right", () => {
     let board = [
-      { row: ['o', 'o', 'o', 0, 'o', 'o', 'o'], leftCount: 3, rightCount: 3 },
+      { row: ["o", "o", "o", 0, "o", "o", "o"], leftCount: 3, rightCount: 3 },
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
@@ -542,44 +550,43 @@ describe("win conditions", () => {
 
   test("vertical left", () => {
     let board = [
-      { row: ['o', 'o', 'o', 0, 'o', 'o', 'o'], leftCount: 3, rightCount: 3 },
-      { row: ['o', 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
-      { row: ['o', 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: ["o", "o", "o", 0, "o", "o", "o"], leftCount: 3, rightCount: 3 },
+      { row: ["o", 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: ["o", 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
     ];
-    const play = playLeft(board, 3,"o");
+    const play = playLeft(board, 3, "o");
     expect(isWinningMove(play.board, play.move)).toBe(true);
   });
 
   test("vertical left", () => {
     let board = [
-      { row: ['o', 'o', 'o', 0, 'o', 'o', 'o'], leftCount: 3, rightCount: 3 },
-      { row: ['o', 0, 0, 0, 0, 0, 'o'], leftCount: 0, rightCount: 0 },
-      { row: ['o', 0, 0, 0, 0, 0, 'o'], leftCount: 0, rightCount: 0 },
+      { row: ["o", "o", "o", 0, "o", "o", "o"], leftCount: 3, rightCount: 3 },
+      { row: ["o", 0, 0, 0, 0, 0, "o"], leftCount: 0, rightCount: 0 },
+      { row: ["o", 0, 0, 0, 0, 0, "o"], leftCount: 0, rightCount: 0 },
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
     ];
-    const play = playRight(board, 3,"o");
+    const play = playRight(board, 3, "o");
     expect(isWinningMove(play.board, play.move)).toBe(true);
   });
 
   test("backward diagonal", () => {
     let board = [
-      { row: ['o', 'o', 'o', 0, 'o', 'o', 'o'], leftCount: 3, rightCount: 3 },
-      { row: ['o', 'o', 0, 0, 0, 0, 'o'], leftCount: 0, rightCount: 0 },
-      { row: ['o', 0, 'o', 0, 0, 0, 'o'], leftCount: 0, rightCount: 0 },
-      { row: ['x', 'x', 'x', 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: ["o", "o", "o", 0, "o", "o", "o"], leftCount: 3, rightCount: 3 },
+      { row: ["o", "o", 0, 0, 0, 0, "o"], leftCount: 0, rightCount: 0 },
+      { row: ["o", 0, "o", 0, 0, 0, "o"], leftCount: 0, rightCount: 0 },
+      { row: ["x", "x", "x", 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
       { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
     ];
-    const play = playLeft(board, 3,"o");
+    const play = playLeft(board, 3, "o");
     expect(isWinningMove(play.board, play.move)).toBe(true);
   });
 });
-

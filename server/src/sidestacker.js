@@ -57,31 +57,36 @@ function GetCappedTopLeftLength(row, column) {
 function GetCappedBottomRightLength(row, column) {
   let distanceRight = boardWidth - column;
   let distanceBottom = boardHeight - row;
-  let diagDistance = distanceRight < distanceBottom ? distanceRight : distanceBottom;
-  return diagDistance < winningLengthMinusOne ? diagDistance : winningLengthMinusOne;
+  let diagDistance =
+    distanceRight < distanceBottom ? distanceRight : distanceBottom;
+  return diagDistance < winningLengthMinusOne
+    ? diagDistance
+    : winningLengthMinusOne;
 }
 
 function accumulatePieces(line) {
-  return line.reduce((acc, curr) => {
-    console.log(acc, curr);
-    if (curr !== acc.current) {
-      if(acc.currentLength > acc.max) {
+  return line.reduce(
+    (acc, curr) => {
+      console.log(acc, curr);
+      if (curr !== acc.current) {
+        if (acc.currentLength > acc.max) {
+          acc.max = acc.currentLength;
+          acc.piece = acc.current;
+        }
+        acc.current = curr;
+        acc.currentLength = 1;
+      } else if (curr !== 0) {
+        acc.currentLength++;
+      }
+
+      if (acc.currentLength > acc.max) {
         acc.max = acc.currentLength;
         acc.piece = acc.current;
       }
-      acc.current = curr;
-      acc.currentLength = 1;
-    } else if(curr !== 0) {
-      acc.currentLength++;
-    }
-    
-    if(acc.currentLength > acc.max) 
-    {
-      acc.max = acc.currentLength;
-      acc.piece = acc.current;
-    }
-    return acc;
-  }, {current: line[0], currentLength: 0, max: 0, piece: line[0]});
+      return acc;
+    },
+    { current: line[0], currentLength: 0, max: 0, piece: line[0] }
+  );
 }
 
 module.exports = {
@@ -96,15 +101,15 @@ module.exports = {
     win = module.exports.isWinningMove(playedBoard.board, playedBoard.move);
     return {
       board: playedBoard.board,
-      win: win
+      win: win,
     };
   },
   winCondition: (line) => {
     const pieces = accumulatePieces(line);
     return {
       win: pieces.max >= winningLength,
-      winner: pieces.max >= winningLength ? pieces.piece : 0
-    }
+      winner: pieces.max >= winningLength ? pieces.piece : 0,
+    };
   },
   createBoard: () => {
     const board = [];
@@ -135,7 +140,9 @@ module.exports = {
     let adjacentPieces = [];
     const playedRow = board[move.row].row;
     const cappedLeft =
-      move.column - winningLengthMinusOne < 0 ? 0 : move.column - winningLengthMinusOne;
+      move.column - winningLengthMinusOne < 0
+        ? 0
+        : move.column - winningLengthMinusOne;
     const cappedRight =
       move.column + winningLengthMinusOne > boardWidth
         ? 6
@@ -212,7 +219,7 @@ module.exports = {
     return {
       bottom: bottom,
       right: right,
-    }
+    };
   },
   playLeft(board, row, player) {
     board[row] = module.exports.stackLeft(board[row], player);
@@ -222,7 +229,7 @@ module.exports = {
         row,
         column: board[row].leftIndex,
       },
-    }
+    };
   },
   playRight(board, row, player) {
     board[row] = module.exports.stackRight(board[row], player);
@@ -232,7 +239,7 @@ module.exports = {
         row,
         column: board[row].rightIndex,
       },
-    }
+    };
   },
   isWinningMove(board, move) {
     const horizontal = module.exports.getHorizontalAdjacentPieces(board, move);
@@ -249,6 +256,11 @@ module.exports = {
     const verticalWin = module.exports.winCondition(vertical);
     const forwardDiagonalWin = module.exports.winCondition(forwardDiagonal);
     const backwardDiagonalWin = module.exports.winCondition(backwardDiagonal);
-    return horizontalWin.win || verticalWin.win || forwardDiagonalWin.win || backwardDiagonalWin.win;
+    return (
+      horizontalWin.win ||
+      verticalWin.win ||
+      forwardDiagonalWin.win ||
+      backwardDiagonalWin.win
+    );
   },
 };
