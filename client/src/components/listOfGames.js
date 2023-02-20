@@ -20,7 +20,7 @@ function GameRow(props) {
   return (
     <tr key={props.game.id}>
       <td>{props.game.name}</td>
-      <td>{props.game.status}</td>
+      <td>{props.game.gameState}</td>
       <td>
         <ButtonGroup>
           <Button color="primary" onClick={clickMe} player="1" outline>
