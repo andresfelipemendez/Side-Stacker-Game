@@ -61,8 +61,6 @@ function GetCappedBottomRightLength(row, column) {
   return diagDistance < winningLengthMinusOne ? diagDistance : winningLengthMinusOne;
 }
 
-
-
 function accumulatePieces(line) {
   return line.reduce((acc, curr) => {
     console.log(acc, curr);
@@ -88,14 +86,18 @@ function accumulatePieces(line) {
 
 module.exports = {
   move: (board, rowIndex, side, player) => {
-    let row = board[rowIndex];
+    let playedBoard = {};
+    let win = false;
     if (side === "left") {
-      row = module.exports.stackLeft(row, player);
+      playedBoard = module.exports.playLeft(board, rowIndex, player);
     } else {
-      row = module.exports.stackRight(row, player);
+      playedBoard = module.exports.playRight(board, rowIndex, player);
     }
-    board[rowIndex] = row;
-    return board;
+    win = module.exports.isWinningMove(playedBoard.board, playedBoard.move);
+    return {
+      board: playedBoard.board,
+      win: win
+    };
   },
   winCondition: (line) => {
     const pieces = accumulatePieces(line);
@@ -210,6 +212,26 @@ module.exports = {
     return {
       bottom: bottom,
       right: right,
+    }
+  },
+  playLeft(board, row, player) {
+    board[row] = module.exports.stackLeft(board[row], player);
+    return {
+      board,
+      move: {
+        row,
+        column: board[row].leftIndex,
+      },
+    }
+  },
+  playRight(board, row, player) {
+    board[row] = module.exports.stackRight(board[row], player);
+    return {
+      board,
+      move: {
+        row,
+        column: board[row].rightIndex,
+      },
     }
   },
   isWinningMove(board, move) {

@@ -9,21 +9,10 @@ export default function Game() {
   const socket = useContext(SocketContext);
   const playerId = params.playerId;
   const [playerTurn, setPlayerTurn] = useState("Loading...");
+
   const [isConnected, setIsConnected] = useState(socket.connected);
-  const [board, setBoard] = useState(
-    { 
-      board:
-      [
-        {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0},
-        {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0},
-        {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0},
-        {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0},
-        {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0},
-        {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0},
-        {row:[0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0}
-      ]
-    }
-  );
+
+  const [board, setBoard] = useState(null);
   
   const setPlayerTurnTitle = (itsMyTurn) => {
     if(itsMyTurn) {
@@ -34,17 +23,22 @@ export default function Game() {
   }
 
   useEffect(() => {
-    socket.on('connect', () => {
+
+    if(isConnected){ 
       socket.emit('getBoard', { 
         gameId: params.id,
         playerId: params.playerId
       });
-      
-      setIsConnected(true);
-    });
+    } else {
+      socket.on('connect', () => {
+        setIsConnected(true);
+      }); 
+    }
 
     socket.on("updateBoard", (newBoard) => {
+      setBoard(newBoard);
       console.log("updateBoard", newBoard);
+
       switch(newBoard.gameState) {
         case "newGame": {
           setPlayerTurnTitle(playerId === "1");
@@ -58,9 +52,15 @@ export default function Game() {
           setPlayerTurnTitle(playerId === "2");
           break;
         }
+        case "player1won": {
+          setPlayerTurn("Player 1 won!");
+          break;
+        }
+        case "player2won": {
+          setPlayerTurn("Player 2 won!");
+          break;
+        }
       }
-    
-      setBoard(newBoard);
     });
 
     socket.on('disconnect', () => {
@@ -72,7 +72,7 @@ export default function Game() {
       socket.off('updateBoard');
       socket.off('disconnect');
     };
-  }, []);
+  }, [ isConnected, params,playerId,playerTurn]);
 
   const sendPlayerMove = ({rowIndex, side, player}) => {
     const gameId = params.id;

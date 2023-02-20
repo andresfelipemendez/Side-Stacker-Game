@@ -76,7 +76,7 @@ module.exports = {
     Game.create({
       name: gameName,
       status: "active",
-      start_time: _db.fn("NOW"),
+      start_time: Date.now(),
       player1: "true",
       gameState: "newGame",
       board: sideStacker.createBoard()
@@ -132,8 +132,6 @@ module.exports = {
         }
       }
 
-      console.log("game found", gameInstance.board[move.rowIndex]);
-
       const newBoard = sideStacker.move(
         gameInstance.board, 
         move.rowIndex, 
@@ -141,15 +139,30 @@ module.exports = {
         move.player
       );
       
+      gameInstance.board[move.rowIndex] = newBoard.board[move.rowIndex];
+      
+      if(newBoard.win)  {
+        var gameState = "player" + move.player + "won";
+        var end_time = Date.now();
+        var duration = Date.now() - gameInstance.start_time;
+
+        console.log("gameState", gameState, "end_time", end_time, "duration", duration);
+        gameInstance.gameState = gameState;
+        gameInstance.end_time = end_time;
+        gameInstance.duration = duration;
+      }
 
       
-      gameInstance.board[move.rowIndex] = newBoard[move.rowIndex];
       gameInstance.changed('board', true);
       gameInstance.save().then((updatedGame) => {
         console.log("board updated", updatedGame.board[move.rowIndex]);
         callback(updatedGame, null);
+      }).catch((error) => {
+        console.log("error", error);
+        callback(null, error);
       });
     }).catch((error) => {
+      console.log("error", error);
       callback(null, error)
     });
   }

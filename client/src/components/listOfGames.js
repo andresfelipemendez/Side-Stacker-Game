@@ -14,7 +14,6 @@ function GameRow(props) {
   const navigate = useNavigate();
 
   function clickMe(e) {
-    console.log("clicked", e.target.getAttribute("player"));
     navigate("/game/" + props.game.id + "/player/" + e.target.getAttribute("player"));
   };
 

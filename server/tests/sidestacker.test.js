@@ -13,6 +13,8 @@ const {
   getBottomRight,
   isWinningMove,
   winCondition,
+  playLeft,
+  playRight
 } = require("../src/sideStacker.js");
 
 it("should create a new board with 7 rows and 7 columns", () => {
@@ -535,8 +537,49 @@ describe("win conditions", () => {
       row: firstRow,
       column: board[firstRow].rightIndex, // 0 base index
     };
-
     expect(isWinningMove(board, move)).toBe(true);
+  });
+
+  test("vertical left", () => {
+    let board = [
+      { row: ['o', 'o', 'o', 0, 'o', 'o', 'o'], leftCount: 3, rightCount: 3 },
+      { row: ['o', 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: ['o', 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+    ];
+    const play = playLeft(board, 3,"o");
+    expect(isWinningMove(play.board, play.move)).toBe(true);
+  });
+
+  test("vertical left", () => {
+    let board = [
+      { row: ['o', 'o', 'o', 0, 'o', 'o', 'o'], leftCount: 3, rightCount: 3 },
+      { row: ['o', 0, 0, 0, 0, 0, 'o'], leftCount: 0, rightCount: 0 },
+      { row: ['o', 0, 0, 0, 0, 0, 'o'], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+    ];
+    const play = playRight(board, 3,"o");
+    expect(isWinningMove(play.board, play.move)).toBe(true);
+  });
+
+  test("backward diagonal", () => {
+    let board = [
+      { row: ['o', 'o', 'o', 0, 'o', 'o', 'o'], leftCount: 3, rightCount: 3 },
+      { row: ['o', 'o', 0, 0, 0, 0, 'o'], leftCount: 0, rightCount: 0 },
+      { row: ['o', 0, 'o', 0, 0, 0, 'o'], leftCount: 0, rightCount: 0 },
+      { row: ['x', 'x', 'x', 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+      { row: [0, 0, 0, 0, 0, 0, 0], leftCount: 0, rightCount: 0 },
+    ];
+    const play = playLeft(board, 3,"o");
+    expect(isWinningMove(play.board, play.move)).toBe(true);
   });
 });
 

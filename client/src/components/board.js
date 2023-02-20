@@ -26,15 +26,18 @@ function getLeftFacingTrianglePath(x, y, width, height) {
 }
 
 export default function Board({ board, player, sendPlayerMove }) {
-  const [hoverState, setHoverState] = useState(board);
+  
+
+  const [hoverState, setHoverState] = useState(false);
 
   useEffect(() => {
+    if(!board) return;
+    
     var s = Snap("#svg");
     const pieceRadius = 30;
     const strokeWidth = 3;
     const leftOffset = pieceRadius + strokeWidth + 80;
     const topOffset = pieceRadius + strokeWidth;
-    console.log("board", player);
 
     let enabled = false;
     switch(board.gameState) {
@@ -64,7 +67,7 @@ export default function Board({ board, player, sendPlayerMove }) {
     const buttonFillColor = enabled ? "#FFE56B" : "#DDD";
     const buttonBorderColor = enabled ? "#FFE56B" : "#EEE";
 
-    board.board.map((row, rowIndex) => {
+    board?.board.map((row, rowIndex) => {
       const leftButton = s.path(getRightFacingTrianglePath(
         topOffset, 
         (80*rowIndex) + topOffset, 
