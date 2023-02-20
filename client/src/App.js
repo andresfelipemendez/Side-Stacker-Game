@@ -1,6 +1,5 @@
-
 import React from "react";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 
 import { Route, Routes } from "react-router-dom";
 import { SocketContext, socket } from "./context/socket";
@@ -10,18 +9,16 @@ import ListOfGames from "./components/listOfGames";
 import Game from "./components/game";
 
 function App() {
-
   return (
     <div>
-    <GameNavbar />
-    <SocketContext.Provider value={socket}>
-    <Routes>
-       <Route exact path="/" element={<ListOfGames />} />
-       <Route path="/game/:id/player/:playerId" element={<Game />} />
-     </Routes>
-     </SocketContext.Provider>
-     
-  </div>
+      <GameNavbar />
+      <SocketContext.Provider value={socket}>
+        <Routes>
+          <Route exact path="/" element={<ListOfGames />} />
+          <Route path="/game/:id/player/:playerId" element={<Game />} />
+        </Routes>
+      </SocketContext.Provider>
+    </div>
   );
 }
 

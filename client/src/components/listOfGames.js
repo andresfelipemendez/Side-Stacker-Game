@@ -1,21 +1,16 @@
 import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import CreateGame from "./createGame";
-import {
-  Card,
-  Table,
-  Button,
-  ButtonGroup,
-  Row,
-  Container,
-} from 'reactstrap';
+import { Card, Table, Button, ButtonGroup, Row, Container } from "reactstrap";
 
 function GameRow(props) {
   const navigate = useNavigate();
 
   function clickMe(e) {
-    navigate("/game/" + props.game.id + "/player/" + e.target.getAttribute("player"));
-  };
+    navigate(
+      "/game/" + props.game.id + "/player/" + e.target.getAttribute("player")
+    );
+  }
 
   return (
     <tr key={props.game.id}>
@@ -32,8 +27,8 @@ function GameRow(props) {
         </ButtonGroup>
       </td>
     </tr>
-  )
-};
+  );
+}
 
 export default function ListOfGames() {
   const [games, setGames] = useState([]);
@@ -61,28 +56,28 @@ export default function ListOfGames() {
 
   return (
     <>
-    <Container >
-      <Row>
-        <CreateGame />
-      </Row>
-      <Row>
-        <Card className="mt-3">
-        <Container>
-        <h3 className="mt-3">Running Games</h3>
-        <Table className="table mt-3">
-          <thead className="thead-light" >
-            <tr>
-              <th>Game Name</th>
-              <th>Game Status</th>
-              <th>Players</th>
-            </tr>
-          </thead>
-          <tbody>{gameList()}</tbody>
-        </Table>  
-        </Container>
-        </Card>
-      </Row>
-    </Container>
+      <Container>
+        <Row>
+          <CreateGame />
+        </Row>
+        <Row>
+          <Card className="mt-3">
+            <Container>
+              <h3 className="mt-3">Running Games</h3>
+              <Table className="table mt-3">
+                <thead className="thead-light">
+                  <tr>
+                    <th>Game Name</th>
+                    <th>Game Status</th>
+                    <th>Players</th>
+                  </tr>
+                </thead>
+                <tbody>{gameList()}</tbody>
+              </Table>
+            </Container>
+          </Card>
+        </Row>
+      </Container>
     </>
   );
 }

@@ -13,33 +13,32 @@ export default function Game() {
   const [isConnected, setIsConnected] = useState(socket.connected);
 
   const [board, setBoard] = useState(null);
-  
+
   const setPlayerTurnTitle = (itsMyTurn) => {
-    if(itsMyTurn) {
-      setPlayerTurn("its your turn")
+    if (itsMyTurn) {
+      setPlayerTurn("its your turn");
     } else {
-      setPlayerTurn("waiting for other player")
+      setPlayerTurn("waiting for other player");
     }
-  }
+  };
 
   useEffect(() => {
-
-    if(isConnected){ 
-      socket.emit('getBoard', { 
+    if (isConnected) {
+      socket.emit("getBoard", {
         gameId: params.id,
-        playerId: params.playerId
+        playerId: params.playerId,
       });
     } else {
-      socket.on('connect', () => {
+      socket.on("connect", () => {
         setIsConnected(true);
-      }); 
+      });
     }
 
     socket.on("updateBoard", (newBoard) => {
       setBoard(newBoard);
       console.log("updateBoard", newBoard);
 
-      switch(newBoard.gameState) {
+      switch (newBoard.gameState) {
         case "newGame": {
           setPlayerTurnTitle(playerId === "1");
           break;
@@ -48,7 +47,7 @@ export default function Game() {
           setPlayerTurnTitle(playerId === "1");
           break;
         }
-        case "player2Turn":{
+        case "player2Turn": {
           setPlayerTurnTitle(playerId === "2");
           break;
         }
@@ -63,21 +62,21 @@ export default function Game() {
       }
     });
 
-    socket.on('disconnect', () => {
+    socket.on("disconnect", () => {
       setIsConnected(false);
     });
 
     return () => {
-      socket.off('connect');
-      socket.off('updateBoard');
-      socket.off('disconnect');
+      socket.off("connect");
+      socket.off("updateBoard");
+      socket.off("disconnect");
     };
-  }, [ isConnected, params,playerId,playerTurn]);
+  }, [isConnected, params, playerId, playerTurn]);
 
-  const sendPlayerMove = ({rowIndex, side, player}) => {
+  const sendPlayerMove = ({ rowIndex, side, player }) => {
     const gameId = params.id;
     console.log("sendPlayerMove", { gameId, rowIndex, side, player });
-    socket.emit("playerMove", {  gameId, rowIndex, side, player });
+    socket.emit("playerMove", { gameId, rowIndex, side, player });
   };
 
   return (
