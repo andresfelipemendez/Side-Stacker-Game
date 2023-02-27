@@ -31,12 +31,18 @@ server.listen(3001, () => {
 // when the other player moves, update the board
 // when the game is over, update the database
 io.on("connection", (socket) => {
-  console.log("a user connected");
+  console.log("a user connected", socket.id);
+
+
   socket.on("getBoard", (params) => {
     console.log("a user requested a gameBoard", params);
     socket.join(params.gameId);
-
-    db.getGame(params.gameId, (game, error) => {
+    
+    db.getGame({
+      gameId: params.gameId,
+      playerId: socket.id
+    }, (game, error) => {
+      console.log("updateBoard from socket layer", game);
       if (!error) {
         socket.emit("updateBoard", game);
       } else {
@@ -58,5 +64,18 @@ io.on("connection", (socket) => {
         });
       }
     });
+  });
+});
+
+io.on("disconnect", (socket) => {
+  console.log("a user disconnected", socket);
+  db.removePlayer(socket.id, (game, error) => {
+    if (!error) {
+      socket.emit("updateBoard", game);
+    } else {
+      socket.emit("updateBoard", {
+        message: error,
+      });
+    }
   });
 });

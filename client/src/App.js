@@ -15,7 +15,7 @@ function App() {
       <SocketContext.Provider value={socket}>
         <Routes>
           <Route exact path="/" element={<ListOfGames />} />
-          <Route path="/game/:id/player/:playerId" element={<Game />} />
+          <Route path="/game/:id/" element={<Game />} />
         </Routes>
       </SocketContext.Provider>
     </div>

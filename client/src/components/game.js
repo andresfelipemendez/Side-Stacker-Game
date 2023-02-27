@@ -7,7 +7,8 @@ import Board from "./board";
 export default function Game() {
   const params = useParams();
   const socket = useContext(SocketContext);
-  const playerId = params.playerId;
+  const [playerId, setPlayerId] = useState(0);
+  
   const [playerTurn, setPlayerTurn] = useState("Loading...");
 
   const [isConnected, setIsConnected] = useState(socket.connected);
@@ -25,19 +26,21 @@ export default function Game() {
   useEffect(() => {
     if (isConnected) {
       socket.emit("getBoard", {
-        gameId: params.id,
-        playerId: params.playerId,
+        gameId: params.id
       });
     } else {
       socket.on("connect", () => {
+        socket.emit("getBoard", {
+          gameId: params.id
+        });
         setIsConnected(true);
       });
     }
 
     socket.on("updateBoard", (newBoard) => {
       setBoard(newBoard);
-      console.log("updateBoard", newBoard);
-
+      console.log("updateBoard", newBoard, socket.id);
+      setPlayerId( socket.id === newBoard.player1 ? "1" : "2" );
       switch (newBoard.gameState) {
         case "newGame": {
           setPlayerTurnTitle(playerId === "1");
@@ -63,6 +66,7 @@ export default function Game() {
     });
 
     socket.on("disconnect", () => {
+      socket.emit("playerDisconnected", playerId);
       setIsConnected(false);
     });
 

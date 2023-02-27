@@ -76,6 +76,8 @@ _db
     console.log("Error creating database & tables", err);
   });
 
+
+
 module.exports = {
   insertGame: (gameName, callback) => {
     console.log("gameName", gameName);
@@ -83,7 +85,6 @@ module.exports = {
       name: gameName,
       status: "active",
       start_time: Date.now(),
-      player1: "true",
       gameState: "newGame",
       board: sideStacker.createBoard(),
     })
@@ -96,6 +97,43 @@ module.exports = {
         callback(null, error);
       });
   },
+  // getFirstAvailablePlayerSlot: (gameId, callback) => {
+  //   _db.models.Game.findOne({
+  //     where: {
+  //       id: gameId,
+  //     },
+  //   })
+  //   .then((gameInstance) => {
+  //     let playerSlot = 0;
+  //     if (gameInstance.player1 === null) {
+  //       playerSlot = 1;
+  //       gameInstance.player1 = "player1";
+  //     } else if (gameInstance.player2 === null) {
+  //       playerSlot = 2;
+  //       gameInstance.player2 = "player2";
+  //     } else {
+  //       callback(null, "no available player slot");
+  //     }
+
+  //     gameInstance
+  //         .save()
+  //         .then((updatedGame) => {
+  //           console.log("board updated", updatedGame.player1, updatedGame.player2);
+  //           callback(playerSlot, null);
+  //         })
+  //         .catch((error) => {
+  //           console.log("error", error);
+  //           callback(null, error);
+  //         });
+  //   })
+  //   .catch((error) => {
+  //     console.log("error", error);
+  //     callback(null, error);
+  //   });
+  // },
+
+  
+
   getGames: (callback) => {
     _db.models.Game.findAll()
       .then((games) => {
@@ -103,17 +141,42 @@ module.exports = {
       })
       .catch((error) => callback(null, error));
   },
-  getGame: (gameId, callback) => {
-    console.log("find gameId in db", gameId);
-    _db.models.Game.findOne({
-      where: {
-        id: gameId,
-      },
-    })
-      .then((game) => {
-        callback(game, null);
+  getGame: (params, callback) => {
+      console.log("find gameId in db", params, params.gameId, params.playerId);
+      console.log("is db defined? ", _db.models.Game);
+      _db.models.Game.findOne({
+        where: {
+          id: params.gameId,
+        },
+      })
+      .then(async (gameInstance) => {
+        console.log("gameInstance found", gameInstance, "player slot",playerSlot);
+        
+        if(gameInstance.player1 === params.playerId) {
+          gameInstance.playerSlot = playerSlot;
+          return callback(gameInstance, null);
+        }
+        else if (gameInstance.player2 === params.playerId) {
+          gameInstance.playerSlot = playerSlot;
+          return callback(gameInstance, null);
+        }
+
+        else if(gameInstance.player1 === null) {
+          gameInstance.player1 = params.playerId;
+        } else if (gameInstance.player2 === null) {
+          gameInstance.player2 = params.playerId;
+        } else {
+          // ???
+        }
+        
+        await gameInstance.save();
+
+        console.log("board updated", gameInstance, "player slot",playerSlot);
+        callback(gameInstance, null);
+
       })
       .catch((error) => {
+        console.log("error finding game: ", error);
         callback(null, error);
       });
   },
@@ -187,4 +250,49 @@ module.exports = {
         callback(null, error);
       });
   },
+  removePlayer:(playerId, callback) => {
+    _db.models.Game.findOne({
+      where: {
+        player1: playerId,
+      },
+    })
+    .then((gameInstance) => {
+      gameInstance.player1 = null;
+      gameInstance.save()
+      .then((updatedGame) => {
+        console.log("player1 removed", updatedGame.player1);
+        callback(updatedGame, null);
+      })
+      .catch((error) => {
+        console.log("error", error);
+        callback(null, error);
+      });
+    })
+    .catch((error) => {
+      console.log("error", error);
+      callback(null, error);
+    });
+    
+    _db.models.Game.findOne({
+      where: {
+        player2: playerId,
+      },
+    })
+    .then((gameInstance) => {
+      gameInstance.player2 = null;
+      gameInstance.save()
+      .then((updatedGame) => {
+        console.log("player2 removed", updatedGame.player2);
+        callback(updatedGame, null);
+      })
+      .catch((error) => {
+        console.log("error", error);
+        callback(null, error);
+      });
+    })
+    .catch((error) => {
+      console.log("error", error);
+      callback(null, error);
+    });
+  }
 };
